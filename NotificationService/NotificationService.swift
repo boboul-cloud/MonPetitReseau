@@ -29,9 +29,8 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
-        // --- DIAGNOSTIC : tag visible pour vérifier que l'extension tourne. ---
-        // On retire ce tag dès que tout marche.
-        bestAttempt.title = "[ext]"
+        // --- DIAGNOSTIC : titres "[ext: ...]" actifs uniquement quand quelque
+        // chose tourne mal. Le cas nominal écrit le nom de l'expéditeur. ---
 
         let userInfo = request.content.userInfo
 
@@ -51,16 +50,29 @@ final class NotificationService: UNNotificationServiceExtension {
             return
         }
 
-        // Champ authorId (messages/photos) ou createdBy (events/todos).
-        let rawAuthor = fields["authorId"] ?? fields["createdBy"]
-
-        // Les champs CKRecord arrivent parfois bruts ("UUID-string"),
-        // parfois enveloppés dans {"value": "...", "type": "STRING"}.
-        let authorId: String? = {
-            if let s = rawAuthor as? String { return s }
-            if let dict = rawAuthor as? [String: Any], let s = dict["value"] as? String { return s }
+        // Helper : champs CloudKit parfois bruts, parfois {"value": ...}.
+        func stringField(_ key: String) -> String? {
+            let raw = fields[key]
+            if let s = raw as? String { return s }
+            if let dict = raw as? [String: Any], let s = dict["value"] as? String { return s }
             return nil
-        }()
+        }
+
+        // Compose le corps depuis le contenu réel du record (text ou title)
+        // pour remplacer le "%1$@" non substitué par iOS.
+        let bodyText = stringField("text") ?? stringField("title")
+        if let bodyText, !bodyText.isEmpty {
+            // Conserve un éventuel emoji préfixe (📅 / ✅ / 📷) déjà dans alertBody.
+            let original = bestAttempt.body
+            if let emoji = original.first, !emoji.isLetter, !emoji.isNumber, emoji != "%" {
+                bestAttempt.body = "\(emoji) \(bodyText)"
+            } else {
+                bestAttempt.body = bodyText
+            }
+        }
+
+        // Champ authorId (messages/photos) ou createdBy (events/todos).
+        let authorId = stringField("authorId") ?? stringField("createdBy")
 
         guard let authorId, !authorId.isEmpty else {
             bestAttempt.title = "[ext: pas d'auteur, fields=\(Array(fields.keys))]"
@@ -70,9 +82,9 @@ final class NotificationService: UNNotificationServiceExtension {
 
         if let name = lookupName(for: authorId), !name.isEmpty {
             bestAttempt.title = name
-        } else {
-            bestAttempt.title = "[ext: inconnu \(authorId.prefix(8))]"
         }
+        // Si on n'a pas trouvé le nom, on laisse le titre par défaut
+        // d'iOS (généralement le nom de l'app).
 
         contentHandler(bestAttempt)
     }
