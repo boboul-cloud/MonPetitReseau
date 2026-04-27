@@ -259,6 +259,16 @@
         }
       }
     },
+    "notif.photo.generic" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "New photo shared" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Nouvelle photo partagée" }
+        }
+      }
+    },
     "notif.photo.one" : {
       "localizations" : {
         "en" : {

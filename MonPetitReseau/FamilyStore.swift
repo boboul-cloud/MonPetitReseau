@@ -186,12 +186,6 @@ final class FamilyStore {
         cloudStatus = cloud.status
         var changed = false
 
-        // Track only items that are genuinely new for notification purposes.
-        let knownEventIDs = Set(events.map(\.id))
-        let knownTodoIDs = Set(todos.map(\.id))
-        let trulyNewEvents = evt.filter { !knownEventIDs.contains($0.id) }
-        let trulyNewTodos = td.filter { !knownTodoIDs.contains($0.id) }
-
         if !msg.isEmpty {
             messages.append(contentsOf: msg)
             messages.sort { $0.date < $1.date }
@@ -222,28 +216,10 @@ final class FamilyStore {
         }
         if changed { save() }
 
-        if notifyUser {
-            // Don't announce records authored by the current user (we already saw them locally).
-            let me = currentUserId
-            let foreignMessages = msg.filter { $0.authorId != me }
-            let foreignEvents = trulyNewEvents.filter { $0.createdBy != me }
-            let foreignTodos = trulyNewTodos.filter { $0.createdBy != me }
-            let foreignPhotos = ph.filter { $0.authorId != me }
-
-            if !foreignMessages.isEmpty || !foreignEvents.isEmpty
-                || !foreignTodos.isEmpty || !foreignPhotos.isEmpty {
-                let nameLookup: (UUID) -> String = { [weak self] uid in
-                    self?.member(uid)?.fullName ?? "?"
-                }
-                NotificationManager.announce(
-                    newMessages: foreignMessages,
-                    newEvents: foreignEvents,
-                    newTodos: foreignTodos,
-                    newPhotos: foreignPhotos,
-                    memberName: nameLookup
-                )
-            }
-        }
+        // Note : we used to compose local notifications here, but CloudKit
+        // subscriptions now deliver alert pushes directly (with the record
+        // text in the body), so doing it again would duplicate every banner.
+        _ = notifyUser
     }
 
     /// One-shot setup the first time the app comes online: register CloudKit

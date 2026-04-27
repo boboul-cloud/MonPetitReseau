@@ -184,35 +184,55 @@ final class CloudSync {
 
     // MARK: - Subscriptions (push notifications)
 
-    /// Create a silent CloudKit subscription per record type for the given familyId.
-    /// Apple will deliver a silent push to every device that called this whenever
-    /// a matching record is created/updated/deleted.
+    /// Create a CloudKit subscription per record type for the given familyId.
+    /// We use **direct** alert pushes (not silent ones) because Apple throttles
+    /// silent pushes aggressively — the user would only get the very first
+    /// notification then nothing for hours. With a real `alertBody` set, iOS
+    /// always delivers the banner immediately, even if the app is killed.
+    /// We also keep `shouldSendContentAvailable = true` so the app refreshes
+    /// in the background when it's allowed to.
     /// Idempotent — re-running with the same familyId is safe.
     func registerSubscriptions(familyId: UUID) async {
         let predicate = NSPredicate(format: "familyId == %@", familyId.uuidString)
-        let allTypes: [RecordType] = [.message, .event, .todo, .member, .photo]
 
-        for type in allTypes {
-            let subID = "sub-\(type.rawValue)-\(familyId.uuidString)"
+        // Per-type alert configuration : (record type, lock-screen text, fields to embed).
+        let configs: [(type: RecordType, body: String, args: [String])] = [
+            (.message, "%1$@",                  ["text"]),
+            (.event,   "📅 %1$@",               ["title"]),
+            (.todo,    "✅ %1$@",               ["title"]),
+            (.photo,   "📷 " + String(localized: "notif.photo.generic"), [])
+        ]
+
+        // First, drop any old silent subscriptions from previous app versions.
+        for type in [RecordType.message, .event, .todo, .member, .photo] {
+            let oldID = "sub-\(type.rawValue)-\(familyId.uuidString)"
+            _ = try? await database.deleteSubscription(withID: oldID)
+        }
+
+        for cfg in configs {
+            let subID = "alert-\(cfg.type.rawValue)-\(familyId.uuidString)"
             let subscription = CKQuerySubscription(
-                recordType: type.rawValue,
+                recordType: cfg.type.rawValue,
                 predicate: predicate,
                 subscriptionID: subID,
-                options: [.firesOnRecordCreation, .firesOnRecordUpdate, .firesOnRecordDeletion]
+                options: [.firesOnRecordCreation]
             )
             let info = CKSubscription.NotificationInfo()
-            info.shouldSendContentAvailable = true     // silent push
-            info.alertBody = nil                        // we craft local notifs ourselves
+            info.alertBody = cfg.body
+            info.alertLocalizationArgs = cfg.args
+            info.desiredKeys = cfg.args
+            info.soundName = "default"
+            info.shouldBadge = true
+            info.shouldSendContentAvailable = true   // also wake the app silently
             subscription.notificationInfo = info
 
             do {
                 _ = try await database.save(subscription)
-                log.info("Subscribed to \(type.rawValue) for family \(familyId.uuidString)")
+                log.info("Subscribed (alert) to \(cfg.type.rawValue) for family \(familyId.uuidString)")
             } catch let error as CKError where error.code == .serverRejectedRequest {
-                // Already exists — that's fine.
                 log.debug("Subscription \(subID) already exists")
             } catch {
-                log.error("Subscribe \(type.rawValue) failed: \(error.localizedDescription)")
+                log.error("Subscribe \(cfg.type.rawValue) failed: \(error.localizedDescription)")
             }
         }
     }
