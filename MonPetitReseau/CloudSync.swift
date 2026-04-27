@@ -242,6 +242,32 @@ final class CloudSync {
                 log.error("Subscribe \(cfg.type.rawValue) failed: \(error.localizedDescription)")
             }
         }
+
+        // Silent companion subscriptions : fire on UPDATE and DELETE for every
+        // record type, so e.g. ticking a todo on iPad wakes the iPhone to refresh.
+        // No alert body → no banner, just a background refresh.
+        for type in [RecordType.message, .event, .todo, .member, .photo] {
+            let subID = "silent-\(type.rawValue)-\(familyId.uuidString)"
+            let subscription = CKQuerySubscription(
+                recordType: type.rawValue,
+                predicate: predicate,
+                subscriptionID: subID,
+                options: [.firesOnRecordUpdate, .firesOnRecordDeletion]
+            )
+            let info = CKSubscription.NotificationInfo()
+            info.shouldSendContentAvailable = true
+            // Leave alertBody nil → silent push, the app handles it.
+            subscription.notificationInfo = info
+
+            do {
+                _ = try await database.save(subscription)
+                log.info("Subscribed (silent) to \(type.rawValue) updates for family \(familyId.uuidString)")
+            } catch let error as CKError where error.code == .serverRejectedRequest {
+                log.debug("Silent subscription \(subID) already exists")
+            } catch {
+                log.error("Silent subscribe \(type.rawValue) failed: \(error.localizedDescription)")
+            }
+        }
     }
 
     // MARK: - Generic helpers
