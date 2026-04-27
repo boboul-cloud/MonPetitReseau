@@ -79,7 +79,8 @@ struct FamilyPhoto: Identifiable, Codable, Hashable {
 // MARK: - Wire format (sharable subset, no photos)
 
 struct FamilyWire: Codable {
-    var v: Int = 1
+    var v: Int = 2
+    var familyId: UUID?           // shared CloudKit channel id (added in v2)
     var members: [FamilyMember]
     var messages: [FamilyMessage]
     var events: [FamilyEvent]

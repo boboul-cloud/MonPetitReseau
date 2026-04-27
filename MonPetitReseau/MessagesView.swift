@@ -9,6 +9,7 @@ struct MessagesView: View {
     @Environment(FamilyStore.self) var store
     @State private var draft = ""
     @FocusState private var focused: Bool
+    @State private var pollTask: Task<Void, Never>?
 
     var body: some View {
         NavigationStack {
@@ -30,6 +31,8 @@ struct MessagesView: View {
                         }
                         .padding()
                     }
+                    .scrollDismissesKeyboard(.interactively)
+                    .refreshable { await store.syncMessages() }
                     .onChange(of: store.messages.count) { _, _ in
                         if let last = store.messages.last {
                             withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
@@ -54,6 +57,7 @@ struct MessagesView: View {
                     Button {
                         store.postMessage(draft)
                         draft = ""
+                        focused = false
                     } label: {
                         Image(systemName: "paperplane.fill")
                             .font(.title3)
@@ -68,6 +72,27 @@ struct MessagesView: View {
             }
             .navigationTitle("tab.messages")
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    cloudStatusIcon
+                }
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("button.done") { focused = false }
+                }
+            }
+            .task {
+                await store.syncMessages()
+                pollTask?.cancel()
+                pollTask = Task {
+                    while !Task.isCancelled {
+                        try? await Task.sleep(for: .seconds(8))
+                        if Task.isCancelled { break }
+                        await store.syncMessages()
+                    }
+                }
+            }
+            .onDisappear { pollTask?.cancel() }
             .overlay {
                 if store.messages.isEmpty {
                     ContentUnavailableView("messages.empty.title",
@@ -75,6 +100,23 @@ struct MessagesView: View {
                                            description: Text("messages.empty.subtitle"))
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private var cloudStatusIcon: some View {
+        switch store.cloudStatus {
+        case .idle:
+            Image(systemName: "icloud.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityLabel("cloud.status.synced")
+        case .syncing:
+            ProgressView().controlSize(.small)
+        case .unavailable(let reason):
+            Image(systemName: "icloud.slash")
+                .foregroundStyle(.orange)
+                .help(reason)
+                .accessibilityLabel(Text(reason))
         }
     }
 }

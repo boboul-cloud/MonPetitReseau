@@ -11,6 +11,7 @@ import SwiftUI
 final class FamilyStore {
 
     var familyName: String
+    var familyId: UUID
     var members: [FamilyMember]
     var messages: [FamilyMessage]
     var events: [FamilyEvent]
@@ -18,7 +19,12 @@ final class FamilyStore {
     var photos: [FamilyPhoto]
     var currentUserId: UUID?
 
-    private static let key = "MonPetitReseau.state.v1"
+    /// CloudKit sync layer (lazy: only used when actively messaging).
+    let cloud = CloudSync()
+    /// Surface-level status for the UI.
+    var cloudStatus: CloudSync.Status = .idle
+
+    private static let key = "MonPetitReseau.state.v2"
     private static let defaults = UserDefaults.standard
 
     // MARK: - Init
@@ -27,6 +33,18 @@ final class FamilyStore {
         if let raw = Self.defaults.data(forKey: Self.key),
            let snap = try? JSONDecoder.iso.decode(Snapshot.self, from: raw) {
             self.familyName = snap.familyName
+            self.familyId = snap.familyId
+            self.members = snap.members
+            self.messages = snap.messages
+            self.events = snap.events
+            self.todos = snap.todos
+            self.photos = snap.photos
+            self.currentUserId = snap.currentUserId
+        } else if let raw = Self.defaults.data(forKey: "MonPetitReseau.state.v1"),
+                  let snap = try? JSONDecoder.iso.decode(LegacySnapshot.self, from: raw) {
+            // Migrate v1 → v2 (assign a fresh familyId).
+            self.familyName = snap.familyName
+            self.familyId = UUID()
             self.members = snap.members
             self.messages = snap.messages
             self.events = snap.events
@@ -35,6 +53,7 @@ final class FamilyStore {
             self.currentUserId = snap.currentUserId
         } else {
             self.familyName = ""
+            self.familyId = UUID()
             self.members = []
             self.messages = []
             self.events = []
@@ -49,6 +68,7 @@ final class FamilyStore {
     func save() {
         let snap = Snapshot(
             familyName: familyName,
+            familyId: familyId,
             members: members,
             messages: messages,
             events: events,
@@ -62,6 +82,18 @@ final class FamilyStore {
     }
 
     private struct Snapshot: Codable {
+        var familyName: String
+        var familyId: UUID
+        var members: [FamilyMember]
+        var messages: [FamilyMessage]
+        var events: [FamilyEvent]
+        var todos: [FamilyTodo]
+        var photos: [FamilyPhoto]
+        var currentUserId: UUID?
+    }
+
+    /// Old persistence format (kept only for one-shot migration).
+    private struct LegacySnapshot: Codable {
         var familyName: String
         var members: [FamilyMember]
         var messages: [FamilyMessage]
@@ -103,12 +135,30 @@ final class FamilyStore {
         guard let uid = currentUserId else { return }
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
-        messages.append(FamilyMessage(authorId: uid, text: trimmed))
+        let msg = FamilyMessage(authorId: uid, text: trimmed)
+        messages.append(msg)
         save()
+        // Push to CloudKit so other family members receive it.
+        let fid = familyId
+        Task { await cloud.push(message: msg, familyId: fid) }
     }
 
     func deleteMessage(_ id: UUID) {
         messages.removeAll { $0.id == id }
+        save()
+        Task { await cloud.delete(messageId: id) }
+    }
+
+    // MARK: - Cloud sync
+
+    /// Pull any new messages from CloudKit into the local store.
+    func syncMessages() async {
+        let known = Set(messages.map(\.id))
+        let fetched = await cloud.fetchNewMessages(familyId: familyId, knownIDs: known)
+        cloudStatus = cloud.status
+        guard !fetched.isEmpty else { return }
+        messages.append(contentsOf: fetched)
+        messages.sort { $0.date < $1.date }
         save()
     }
 
@@ -165,6 +215,7 @@ final class FamilyStore {
 
     func makeWire() -> FamilyWire {
         FamilyWire(
+            familyId: familyId,
             members: members,
             messages: messages,
             events: events,
@@ -177,6 +228,10 @@ final class FamilyStore {
     /// union for messages (deduplicated by id).
     func merge(_ wire: FamilyWire) {
         if familyName.isEmpty { familyName = wire.familyName }
+        // Adopt the shared family channel id when joining via URL.
+        if let incoming = wire.familyId {
+            familyId = incoming
+        }
 
         var memberMap: [UUID: FamilyMember] = Dictionary(uniqueKeysWithValues: members.map { ($0.id, $0) })
         for m in wire.members { memberMap[m.id] = m }
