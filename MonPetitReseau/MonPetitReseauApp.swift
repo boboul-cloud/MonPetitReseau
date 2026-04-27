@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct MonPetitReseauApp: App {
+    @State private var store = FamilyStore()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(store)
+                .onOpenURL { store.importFromURL($0) }
         }
     }
 }

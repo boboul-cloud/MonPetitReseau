@@ -1,0 +1,12 @@
+{
+  "name": "MonPetitRéseau",
+  "short_name": "PetitRéseau",
+  "description": "Réseau familial privé sans serveur",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f0f17",
+  "theme_color": "#7c3aed",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

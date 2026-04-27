@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>MonPetitRéseau</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<style>
+  :root {
+    --bg: #0f0f17;
+    --card: #1c1c2a;
+    --card2: #25253a;
+    --txt: #f5f5fa;
+    --muted: #9a9ab8;
+    --accent: #a855f7;
+    --accent2: #ec4899;
+    --me: #6366f1;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(180deg, #1a1030 0%, #0f0f17 100%);
+    color: var(--txt);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  header {
+    padding: 20px 16px 12px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.4em;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header .sub { color: var(--muted); font-size: 0.85em; margin-top: 4px; }
+  .container { max-width: 720px; margin: 0 auto; padding: 0 12px; }
+  .tabs {
+    display: flex; gap: 4px; margin: 16px 0; padding: 4px;
+    background: var(--card); border-radius: 12px;
+    overflow-x: auto;
+  }
+  .tab {
+    flex: 1; padding: 10px; border: none;
+    background: transparent; color: var(--muted);
+    border-radius: 8px; font-size: 0.85em; cursor: pointer;
+    white-space: nowrap;
+  }
+  .tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; font-weight: 600;
+  }
+  .card {
+    background: var(--card); border-radius: 16px;
+    padding: 14px; margin-bottom: 10px;
+  }
+  .row { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+  }
+  .avatar.sm { width: 30px; height: 30px; font-size: 16px; }
+  .name { font-weight: 600; }
+  .muted { color: var(--muted); font-size: 0.85em; }
+  .badge {
+    display: inline-block; font-size: 0.7em; padding: 2px 8px;
+    border-radius: 999px; background: var(--accent); color: white;
+    margin-left: 8px; font-weight: 700;
+  }
+  .msg { display: flex; gap: 8px; margin-bottom: 12px; align-items: flex-end; }
+  .msg.me { flex-direction: row-reverse; }
+  .bubble {
+    max-width: 75%; padding: 10px 14px;
+    background: var(--card2); border-radius: 16px;
+    word-wrap: break-word;
+  }
+  .msg.me .bubble {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+  }
+  .meta { font-size: 0.7em; color: var(--muted); margin-top: 4px; }
+  .compose {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg); padding: 12px;
+    border-top: 1px solid #2a2a3e;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .compose input {
+    flex: 1; padding: 12px 16px; border-radius: 22px;
+    border: none; background: var(--card2); color: var(--txt);
+    font-size: 1em;
+  }
+  .compose button {
+    padding: 12px 18px; border-radius: 22px; border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; font-weight: 600; cursor: pointer;
+  }
+  .compose button:disabled { opacity: 0.4; }
+  .empty {
+    text-align: center; padding: 40px 16px;
+    color: var(--muted);
+  }
+  .event-date {
+    background: rgba(168, 85, 247, 0.2); border-radius: 10px;
+    padding: 8px 12px; text-align: center; min-width: 60px;
+  }
+  .event-date .d { font-size: 1.4em; font-weight: 700; }
+  .event-date .m { font-size: 0.7em; text-transform: uppercase; }
+  .todo { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+  .todo .check {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid var(--muted); display: inline-block;
+    flex-shrink: 0;
+  }
+  .todo.done .check {
+    background: var(--accent); border-color: var(--accent);
+  }
+  .todo.done .title { text-decoration: line-through; color: var(--muted); }
+  .share-box {
+    background: var(--card2); padding: 12px; border-radius: 10px;
+    margin-top: 12px; font-size: 0.8em; word-break: break-all;
+    color: var(--muted);
+  }
+  .btn {
+    display: inline-block; padding: 10px 16px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white; border-radius: 10px; border: none;
+    text-decoration: none; font-weight: 600; cursor: pointer;
+    font-size: 0.9em;
+  }
+  .btn.sec {
+    background: var(--card2); color: var(--txt);
+  }
+  .err { padding: 40px 16px; text-align: center; color: #f87171; }
+  .footer { text-align: center; padding: 20px; color: var(--muted); font-size: 0.75em; }
+  .me-picker { margin: 12px 0; padding: 12px; background: var(--card); border-radius: 12px; }
+  .me-picker select {
+    width: 100%; padding: 10px; border-radius: 8px;
+    background: var(--card2); color: var(--txt); border: none; font-size: 1em;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1 id="familyName">MonPetitRéseau</h1>
+  <div class="sub" id="memberCount">—</div>
+</header>
+
+<div class="container">
+  <div id="content"></div>
+</div>
+
+<div class="footer">
+  Réseau familial privé · sans serveur · partagé par lien
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
+<script>
+// ---------- URL codec (matches Swift URLCodec) ----------
+
+function base64urlDecode(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  const bin = atob(s);
+  const out = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+function base64urlEncode(bytes) {
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function decodeWire(token) {
+  try {
+    const compressed = base64urlDecode(token);
+    const json = pako.inflateRaw(compressed, { to: 'string' });
+    return JSON.parse(json);
+  } catch (e) { console.error(e); return null; }
+}
+function encodeWire(wire) {
+  const json = JSON.stringify(wire);
+  const compressed = pako.deflateRaw(json);
+  return base64urlEncode(compressed);
+}
+
+// ---------- Parse URL ----------
+
+function parseHash() {
+  const raw = location.hash.startsWith('#') ? location.hash.slice(1) : location.hash;
+  const out = {};
+  raw.split('&').forEach(p => {
+    const i = p.indexOf('=');
+    if (i > 0) out[p.slice(0, i)] = p.slice(i + 1);
+  });
+  // also support ?me=...
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('me')) out.me = qs.get('me');
+  return out;
+}
+
+const params = parseHash();
+let wire = params.d ? decodeWire(params.d) : null;
+let meId = params.me || null;
+
+if (!wire) {
+  document.getElementById('content').innerHTML =
+    '<div class="err">⚠️ Aucune donnée à afficher.<br><br>Ce lien semble invalide ou vide. Demandez à un membre de la famille un nouveau lien.</div>';
+  throw new Error('no data');
+}
+
+if (!meId && wire.members.length > 0) meId = wire.members[0].id;
+
+// ---------- Helpers ----------
+
+const memberById = id => wire.members.find(m => m.id === id);
+const fmtDate = ts => new Date(ts * 1000).toLocaleDateString('fr-FR',
+  { day: 'numeric', month: 'long', year: 'numeric' });
+const fmtDateTime = ts => new Date(ts * 1000).toLocaleString('fr-FR',
+  { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+const fmtRelative = ts => {
+  const diff = (Date.now() / 1000) - ts;
+  if (diff < 60) return 'à l’instant';
+  if (diff < 3600) return Math.floor(diff/60) + ' min';
+  if (diff < 86400) return Math.floor(diff/3600) + ' h';
+  if (diff < 86400*7) return Math.floor(diff/86400) + ' j';
+  return new Date(ts*1000).toLocaleDateString('fr-FR');
+};
+function avatarHTML(member, sm=false) {
+  if (!member) return `<div class="avatar ${sm?'sm':''}">?</div>`;
+  return `<div class="avatar ${sm?'sm':''}">${member.emoji || (member.firstName[0]||'?')}</div>`;
+}
+
+// ---------- Header ----------
+
+document.getElementById('familyName').textContent = wire.familyName || 'MonPetitRéseau';
+document.getElementById('memberCount').textContent =
+  `${wire.members.length} membre(s) · ${wire.messages.length} message(s)`;
+
+// ---------- Tabs ----------
+
+const tabs = ['members', 'wall', 'events', 'todos', 'share'];
+const labels = { members: '👥 Famille', wall: '💬 Mur', events: '📅 Événements', todos: '✅ Tâches', share: '🔗 Partager' };
+let active = 'wall';
+
+function render() {
+  let html = '<div class="tabs">';
+  tabs.forEach(t => {
+    html += `<button class="tab ${t===active?'active':''}" onclick="setTab('${t}')">${labels[t]}</button>`;
+  });
+  html += '</div>';
+
+  // me picker
+  html += '<div class="me-picker"><label class="muted" style="font-size:0.8em;">Vous êtes :</label>';
+  html += '<select id="mePicker" onchange="setMe(this.value)">';
+  wire.members.forEach(m => {
+    html += `<option value="${m.id}" ${m.id===meId?'selected':''}>${m.emoji||''} ${m.firstName} ${m.lastName}</option>`;
+  });
+  html += '</select></div>';
+
+  if (active === 'members') html += renderMembers();
+  if (active === 'wall')    html += renderWall();
+  if (active === 'events')  html += renderEvents();
+  if (active === 'todos')   html += renderTodos();
+  if (active === 'share')   html += renderShare();
+
+  document.getElementById('content').innerHTML = html;
+  document.body.style.paddingBottom = active === 'wall' ? '80px' : '20px';
+  if (active === 'wall') renderCompose();
+}
+
+function setTab(t) { active = t; render(); }
+function setMe(id) { meId = id; render(); }
+
+function renderMembers() {
+  if (!wire.members.length) return '<div class="empty">Aucun membre.</div>';
+  return wire.members.map(m => `
+    <div class="card">
+      <div class="row">
+        ${avatarHTML(m)}
+        <div style="flex:1">
+          <div class="name">${escape(m.firstName)} ${escape(m.lastName)} ${m.id===meId?'<span class="badge">MOI</span>':''}</div>
+          ${m.role ? `<div class="muted">${escape(m.role)}</div>` : ''}
+          ${m.city ? `<div class="muted">📍 ${escape(m.city)}</div>` : ''}
+          ${m.phone ? `<div class="muted"><a href="tel:${m.phone}" style="color:var(--accent2)">📞 ${escape(m.phone)}</a></div>` : ''}
+          ${m.email ? `<div class="muted"><a href="mailto:${m.email}" style="color:var(--accent2)">✉️ ${escape(m.email)}</a></div>` : ''}
+          ${m.birthDate ? `<div class="muted">🎂 ${fmtDate(m.birthDate)}</div>` : ''}
+        </div>
+      </div>
+      ${m.bio ? `<div class="muted" style="margin-top:8px">${escape(m.bio)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderWall() {
+  if (!wire.messages.length) {
+    return '<div class="empty">Aucun message.<br>Soyez le premier à écrire !</div>';
+  }
+  const sorted = [...wire.messages].sort((a,b) => a.date - b.date);
+  return sorted.map(msg => {
+    const author = memberById(msg.authorId);
+    const isMe = msg.authorId === meId;
+    return `
+      <div class="msg ${isMe?'me':''}">
+        ${avatarHTML(author, true)}
+        <div>
+          ${!isMe && author ? `<div class="muted" style="font-size:0.7em;margin-bottom:2px">${escape(author.firstName)}</div>` : ''}
+          <div class="bubble">${escape(msg.text)}</div>
+          <div class="meta">${fmtRelative(msg.date)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderEvents() {
+  // birthdays
+  const cal = wire.members.filter(m => m.birthDate).map(m => {
+    const bd = new Date(m.birthDate * 1000);
+    const now = new Date();
+    let next = new Date(now.getFullYear(), bd.getMonth(), bd.getDate());
+    if (next < now) next = new Date(now.getFullYear()+1, bd.getMonth(), bd.getDate());
+    return { member: m, next };
+  }).sort((a,b) => a.next - b.next);
+
+  let html = '';
+  if (cal.length) {
+    html += '<div class="card"><div class="muted" style="margin-bottom:8px">🎂 Anniversaires à venir</div>';
+    cal.slice(0,5).forEach(item => {
+      html += `<div class="row" style="padding:6px 0">
+        ${avatarHTML(item.member, true)}
+        <div style="flex:1">
+          <div class="name">${escape(item.member.firstName)} ${escape(item.member.lastName)}</div>
+          <div class="muted">${item.next.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long'})}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  if (!wire.events.length && !cal.length) return '<div class="empty">Aucun événement.</div>';
+
+  const events = [...wire.events].sort((a,b) => a.date - b.date);
+  events.forEach(e => {
+    const d = new Date(e.date * 1000);
+    html += `
+      <div class="card row">
+        <div class="event-date">
+          <div class="d">${d.getDate()}</div>
+          <div class="m">${d.toLocaleDateString('fr-FR',{month:'short'}).replace('.','')}</div>
+        </div>
+        <div style="flex:1">
+          <div class="name">${escape(e.title)}</div>
+          ${e.location ? `<div class="muted">📍 ${escape(e.location)}</div>` : ''}
+          <div class="muted">${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
+          ${e.details ? `<div class="muted" style="margin-top:4px">${escape(e.details)}</div>` : ''}
+        </div>
+      </div>`;
+  });
+  return html;
+}
+
+function renderTodos() {
+  if (!wire.todos.length) return '<div class="empty">Aucune tâche.</div>';
+  const pending = wire.todos.filter(t => !t.isDone);
+  const done = wire.todos.filter(t => t.isDone);
+  let html = '';
+  if (pending.length) {
+    html += '<div class="card"><div class="muted" style="margin-bottom:8px">À faire</div>';
+    pending.forEach(t => {
+      const a = memberById(t.assignedTo);
+      html += `<div class="todo">
+        <span class="check"></span>
+        <div style="flex:1"><div class="title">${escape(t.title)}</div>
+        ${a ? `<div class="muted" style="font-size:0.75em">→ ${escape(a.firstName)}</div>` : ''}</div>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  if (done.length) {
+    html += '<div class="card"><div class="muted" style="margin-bottom:8px">Terminées</div>';
+    done.forEach(t => {
+      html += `<div class="todo done">
+        <span class="check"></span>
+        <span class="title">${escape(t.title)}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  return html;
+}
+
+function renderShare() {
+  const url = location.origin + location.pathname + '#d=' + params.d + (meId ? '&me=' + meId : '');
+  return `
+    <div class="card">
+      <div class="name" style="margin-bottom:8px">🔗 Partager ce réseau</div>
+      <div class="muted">Envoyez ce lien à un proche par SMS ou messagerie. Il pourra rejoindre votre famille en un clic.</div>
+      <div class="share-box">${escape(url)}</div>
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn" onclick="copyURL('${url.replace(/'/g, "\\'")}')">📋 Copier</button>
+        <a class="btn sec" href="sms:?body=${encodeURIComponent(url)}">📱 SMS</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="name" style="margin-bottom:8px">📲 Application iOS</div>
+      <div class="muted">Pour profiter pleinement de MonPetitRéseau (ajout de membres, messages, photos, événements), téléchargez l'app iOS et collez ce lien à l'ouverture.</div>
+    </div>
+  `;
+}
+
+function renderCompose() {
+  const div = document.createElement('div');
+  div.className = 'compose';
+  div.innerHTML = `
+    <input id="msgInput" type="text" placeholder="Écrire un message…" maxlength="500">
+    <button id="sendBtn" onclick="sendMessage()">Envoyer</button>
+  `;
+  document.body.appendChild(div);
+  document.getElementById('msgInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendMessage();
+  });
+}
+
+function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = (input.value || '').trim();
+  if (!text || !meId) return;
+  const newMsg = {
+    id: uuid(), authorId: meId, text,
+    date: Math.floor(Date.now() / 1000)
+  };
+  wire.messages.push(newMsg);
+  const newToken = encodeWire(wire);
+  params.d = newToken;
+  // Update URL hash
+  const newURL = location.pathname + '#d=' + newToken + (meId ? '&me=' + meId : '');
+  history.replaceState(null, '', newURL);
+  input.value = '';
+  // Re-render and offer to share
+  document.querySelector('.compose')?.remove();
+  render();
+  setTimeout(() => {
+    if (confirm('Message ajouté. Envoyer le lien mis à jour à votre famille par SMS ?')) {
+      const url = location.origin + location.pathname + '#d=' + newToken + (meId ? '&me=' + meId : '');
+      location.href = 'sms:?body=' + encodeURIComponent(url);
+    }
+  }, 300);
+}
+
+function uuid() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function copyURL(url) {
+  navigator.clipboard.writeText(url).then(() =>
+    alert('Lien copié !')
+  );
+}
+
+function escape(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
+  );
+}
+
+window.setTab = setTab;
+window.setMe = setMe;
+window.sendMessage = sendMessage;
+window.copyURL = copyURL;
+
+render();
+
+// PWA service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
