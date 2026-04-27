@@ -41,13 +41,18 @@ struct SettingsView: View {
                 Section("settings.section.share") {
                     Text("settings.share.help")
                         .font(.caption).foregroundStyle(.secondary)
-                    if let url = shareURL ?? store.shareURL() {
-                        ShareLink(item: url, subject: Text(store.familyName.isEmpty
-                                                           ? "MonPetitReseau"
-                                                           : store.familyName)) {
+                    let message = store.shareMessage()
+                    let appURL = store.shareAppURL()
+                    if !message.isEmpty {
+                        ShareLink(item: message,
+                                  subject: Text(store.familyName.isEmpty
+                                                ? "MonPetitReseau"
+                                                : store.familyName)) {
                             Label("settings.share.button", systemImage: "square.and.arrow.up")
                         }
-                        Text(url.absoluteString)
+                    }
+                    if let appURL {
+                        Text(appURL.absoluteString)
                             .font(.caption2).foregroundStyle(.secondary)
                             .lineLimit(2).truncationMode(.middle)
                             .textSelection(.enabled)

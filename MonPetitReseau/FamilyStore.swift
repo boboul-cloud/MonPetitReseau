@@ -364,12 +364,43 @@ final class FamilyStore {
     // MARK: - URLs
 
     static let webBase = "https://boboul-cloud.github.io/MonPetitReseau/"
+    static let appScheme = "monpetitreseau"
 
     func shareURL() -> URL? {
         guard let token = URLCodec.encode(makeWire()) else { return nil }
         var s = "\(Self.webBase)#d=\(token)"
         if let me = currentUserId { s += "&me=\(me.uuidString)" }
         return URL(string: s)
+    }
+
+    /// Custom-scheme URL that opens directly inside the app (no Safari hop).
+    func shareAppURL() -> URL? {
+        guard let token = URLCodec.encode(makeWire()) else { return nil }
+        var s = "\(Self.appScheme)://import#d=\(token)"
+        if let me = currentUserId { s += "&me=\(me.uuidString)" }
+        return URL(string: s)
+    }
+
+    /// Pretty multi-line message ready for SMS / iMessage / Mail. Includes both
+    /// the in-app deep link and the web fallback so recipients without the app
+    /// can still join via the web companion.
+    func shareMessage() -> String {
+        let name = familyName.isEmpty
+            ? String(localized: "share.default.familyName")
+            : familyName
+        let intro = String(format: String(localized: "share.message.intro"), name)
+        var lines: [String] = [intro]
+        if let app = shareAppURL() {
+            lines.append("")
+            lines.append(String(localized: "share.message.app"))
+            lines.append(app.absoluteString)
+        }
+        if let web = shareURL() {
+            lines.append("")
+            lines.append(String(localized: "share.message.web"))
+            lines.append(web.absoluteString)
+        }
+        return lines.joined(separator: "\n")
     }
 
     /// Try to load a wire from a deep link / pasted URL.

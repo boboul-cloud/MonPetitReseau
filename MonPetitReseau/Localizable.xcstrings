@@ -2033,6 +2033,46 @@
         }
       }
     },
+    "share.default.familyName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "my family" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "ma famille" }
+        }
+      }
+    },
+    "share.message.intro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Join %@ on MonPetitReseau!" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Rejoins %@ sur MonPetitReseau !" }
+        }
+      }
+    },
+    "share.message.app" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "📱 Open in the app:" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "📱 Ouvrir dans l'app :" }
+        }
+      }
+    },
+    "share.message.web" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "🌐 Without the app:" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "🌐 Sans l'app :" }
+        }
+      }
+    },
     "settings.share.help" : {
       "localizations" : {
         "en" : {
