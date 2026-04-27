@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Tinted: grayscale on transparent; iOS will tint -->
+  <rect width="1024" height="1024" fill="#000000"/>
+
+  <g stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="14" stroke-linecap="round" fill="none">
+    <path d="M 320 380 Q 380 300 512 540"/>
+    <path d="M 704 380 Q 644 300 512 540"/>
+    <path d="M 320 380 Q 512 280 704 380"/>
+    <path d="M 240 540 Q 360 540 512 540"/>
+    <path d="M 784 540 Q 664 540 512 540"/>
+    <path d="M 240 540 Q 320 700 512 800"/>
+    <path d="M 784 540 Q 704 700 512 800"/>
+    <path d="M 512 540 L 512 800"/>
+  </g>
+
+  <g fill="#FFFFFF">
+    <circle cx="320" cy="380" r="78"/>
+    <circle cx="704" cy="380" r="78"/>
+    <circle cx="240" cy="540" r="62"/>
+    <circle cx="784" cy="540" r="62"/>
+    <circle cx="512" cy="540" r="92"/>
+    <circle cx="512" cy="800" r="74"/>
+    <circle cx="380" cy="700" r="46"/>
+  </g>
+
+  <g transform="translate(512 540)" fill="#000000">
+    <path d="M 0 28 C -42 -8 -68 -36 -38 -62 C -18 -78 0 -56 0 -36 C 0 -56 18 -78 38 -62 C 68 -36 42 -8 0 28 Z"/>
+  </g>
+</svg>
