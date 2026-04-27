@@ -196,21 +196,25 @@ final class CloudSync {
         let predicate = NSPredicate(format: "familyId == %@", familyId.uuidString)
 
         // Per-type alert configuration : (record type, lock-screen text, fields to embed).
-        let configs: [(type: RecordType, body: String, args: [String])] = [
-            (.message, "%1$@",                  ["text"]),
-            (.event,   "📅 %1$@",               ["title"]),
-            (.todo,    "✅ %1$@",               ["title"]),
-            (.photo,   "📷 " + String(localized: "notif.photo.generic"), [])
+        // The Notification Service Extension reads `authorId` (when present) to
+        // prepend the sender's display name to the body.
+        let configs: [(type: RecordType, body: String, args: [String], desired: [String])] = [
+            (.message, "%1$@",                  ["text"],  ["text", "authorId"]),
+            (.event,   "📅 %1$@",               ["title"], ["title", "createdBy"]),
+            (.todo,    "✅ %1$@",               ["title"], ["title", "createdBy"]),
+            (.photo,   "📷 " + String(localized: "notif.photo.generic"), [], ["authorId"])
         ]
 
-        // First, drop any old silent subscriptions from previous app versions.
+        // First, drop any old subscriptions from previous app versions.
         for type in [RecordType.message, .event, .todo, .member, .photo] {
-            let oldID = "sub-\(type.rawValue)-\(familyId.uuidString)"
-            _ = try? await database.deleteSubscription(withID: oldID)
+            for prefix in ["sub-", "alert-"] {
+                let oldID = "\(prefix)\(type.rawValue)-\(familyId.uuidString)"
+                _ = try? await database.deleteSubscription(withID: oldID)
+            }
         }
 
         for cfg in configs {
-            let subID = "alert-\(cfg.type.rawValue)-\(familyId.uuidString)"
+            let subID = "alert2-\(cfg.type.rawValue)-\(familyId.uuidString)"
             let subscription = CKQuerySubscription(
                 recordType: cfg.type.rawValue,
                 predicate: predicate,
@@ -220,10 +224,13 @@ final class CloudSync {
             let info = CKSubscription.NotificationInfo()
             info.alertBody = cfg.body
             info.alertLocalizationArgs = cfg.args
-            info.desiredKeys = cfg.args
+            info.desiredKeys = cfg.desired
             info.soundName = "default"
             info.shouldBadge = true
             info.shouldSendContentAvailable = true   // also wake the app silently
+            // Route the push through the Notification Service Extension so it
+            // can resolve authorId → display name before showing the banner.
+            info.shouldSendMutableContent = true
             subscription.notificationInfo = info
 
             do {

@@ -79,6 +79,24 @@ final class FamilyStore {
         if let data = try? JSONEncoder.iso.encode(snap) {
             Self.defaults.set(data, forKey: Self.key)
         }
+        writeMembersForExtension()
+    }
+
+    /// Mirror the (memberId → fullName) lookup table into the App Group container
+    /// so the Notification Service Extension can resolve the sender's name even
+    /// when the main app is not running.
+    private func writeMembersForExtension() {
+        guard
+            let container = FileManager.default
+                .containerURL(forSecurityApplicationGroupIdentifier:
+                    "group.bob.oulhen-gmail.com.MonPetitReseau")
+        else { return }
+        let dict = Dictionary(uniqueKeysWithValues:
+            members.map { ($0.id.uuidString, $0.fullName) })
+        let url = container.appendingPathComponent("members.json")
+        if let data = try? JSONEncoder().encode(dict) {
+            try? data.write(to: url, options: .atomic)
+        }
     }
 
     private struct Snapshot: Codable {
