@@ -51,6 +51,7 @@ struct OnboardingView: View {
     @State private var lastName = ""
     @State private var emoji = "🙂"
     @State private var pasteURL = ""
+    @State private var showHelp = false
 
     private let emojis = ["🙂","😀","😎","🥳","🧔","👨","👩","🧑","👴","👵","👶","🧓","🦸","🦸‍♀️","👮","👨‍🍳","👩‍🎤","🧙","🦊","🐱"]
 
@@ -116,10 +117,16 @@ struct OnboardingView: View {
                     } label: {
                         Label("onboarding.sample", systemImage: "sparkles")
                     }
+                    Button {
+                        showHelp = true
+                    } label: {
+                        Label("onboarding.help", systemImage: "questionmark.circle")
+                    }
                 }
             }
             .navigationTitle("onboarding.title")
             .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: $showHelp) { HelpView() }
         }
         .interactiveDismissDisabled()
     }

@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+build/
+DerivedData/
+*.moved-aside
+
+# Swift Package Manager
+.swiftpm/
+.build/
+Packages/
+Package.resolved
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+*.log

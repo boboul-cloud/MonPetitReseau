@@ -391,6 +391,143 @@
     "sample.msg2" : { "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "See you on Sunday for lunch ❤️" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rendez-vous dimanche pour le déjeuner ❤️" } }
+    }},
+
+    "onboarding.help" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "How does it work?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Comment ça marche ?" } }
+    }},
+    "settings.help.button" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "User guide" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode d'emploi" } }
+    }},
+
+    "help.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "User guide" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode d'emploi" } }
+    }},
+    "help.hero.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome to your family network" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bienvenue dans votre réseau familial" } }
+    }},
+    "help.hero.subtitle" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Stay close to your loved ones, without a server, without an account, without anyone spying on you." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Restez proches de vos proches, sans serveur, sans compte, sans que personne vous espionne." } }
+    }},
+    "help.intro.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "What is MonPetitReseau?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "C'est quoi MonPetitRéseau ?" } }
+    }},
+    "help.intro.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "A small private space for your family: a directory, a wall to chat, photos, events and shared tasks. Everything stays on your iPhone. To exchange with your relatives, the app generates a magic link that you send by SMS — no server, no account." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Un petit espace privé pour votre famille : un annuaire, un mur pour discuter, des photos, des événements et des tâches partagées. Tout reste sur votre iPhone. Pour échanger avec vos proches, l'app génère un lien magique que vous envoyez par SMS — pas de serveur, pas de compte." } }
+    }},
+
+    "help.step1.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Create your family" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Créez votre famille" } }
+    }},
+    "help.step1.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "On the welcome screen, fill in the family name and your first card (it's you!). You'll be able to add other members afterwards." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sur l'écran d'accueil, renseignez le nom de la famille et votre première fiche (c'est vous !). Vous pourrez ajouter les autres membres ensuite." } }
+    }},
+    "help.step2.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add your relatives" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajoutez vos proches" } }
+    }},
+    "help.step2.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "In the Family tab, tap the + at the top right. Add a first name, an emoji, optionally a phone number, an email, the birthday and the family ties (mother, father, partner)." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dans l'onglet Famille, touchez le + en haut à droite. Ajoutez un prénom, un emoji, éventuellement un numéro, un e-mail, la date d'anniversaire et les liens familiaux (mère, père, conjoint·e)." } }
+    }},
+    "help.step3.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Share with your family" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partagez avec votre famille" } }
+    }},
+    "help.step3.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Go to Settings → Share my family. A link is generated. Send it by SMS or iMessage to a relative. They open it on their iPhone (or in their browser) and instantly join your network." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Allez dans Réglages → Partager ma famille. Un lien est généré. Envoyez-le par SMS ou iMessage à un proche. Il l'ouvre sur son iPhone (ou dans son navigateur) et rejoint instantanément votre réseau." } }
+    }},
+    "help.step4.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Receive a family" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Recevez une famille" } }
+    }},
+    "help.step4.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "When a relative sends you a link, tap it: the app opens and merges their data with yours. You can also paste a link from Settings → Paste a link." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quand un proche vous envoie un lien, touchez-le : l'app s'ouvre et fusionne ses données avec les vôtres. Vous pouvez aussi coller un lien depuis Réglages → Coller un lien." } }
+    }},
+    "help.step5.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Chat, share, plan" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Discutez, partagez, planifiez" } }
+    }},
+    "help.step5.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Write on the wall, post photos, schedule a Sunday lunch, assign a task to your brother — and re-share the link to publish updates." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Écrivez sur le mur, publiez des photos, programmez un déjeuner du dimanche, assignez une tâche à votre frère — puis re-partagez le lien pour diffuser les mises à jour." } }
+    }},
+
+    "help.features.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "The 5 tabs" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les 5 onglets" } }
+    }},
+    "help.feat.directory.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Family — directory" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Famille — annuaire" } }
+    }},
+    "help.feat.directory.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All members with their phone, email, city, family ties and upcoming birthdays." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tous les membres avec téléphone, e-mail, ville, liens de parenté et anniversaires à venir." } }
+    }},
+    "help.feat.wall.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wall — chat" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mur — discussion" } }
+    }},
+    "help.feat.wall.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "A common timeline where everyone can post short messages." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Une timeline commune où chacun peut poster de petits messages." } }
+    }},
+    "help.feat.photos.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Photos — memories" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Photos — souvenirs" } }
+    }},
+    "help.feat.photos.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "A shared gallery of memories. Photos stay on your iPhone (not in the share link, too heavy)." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Une galerie partagée de souvenirs. Les photos restent sur votre iPhone (pas dans le lien de partage, trop lourdes)." } }
+    }},
+    "help.feat.events.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Events — calendar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Événements — calendrier" } }
+    }},
+    "help.feat.events.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Family lunches, holidays, gatherings — and birthdays counted automatically." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Déjeuners de famille, vacances, retrouvailles — et anniversaires comptés automatiquement." } }
+    }},
+    "help.feat.todos.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Tasks — to do" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tâches — à faire" } }
+    }},
+    "help.feat.todos.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Shopping, things to bring, errands — assign a task to a member to share the load." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Courses, choses à apporter, démarches — assignez une tâche à un membre pour partager la charge." } }
+    }},
+
+    "help.privacy.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Your privacy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Votre vie privée" } }
+    }},
+    "help.privacy.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No server, no account, no tracking. Your data lives only on your iPhone and in the share links you choose to send. Whoever has the link can see the family — share only with people you trust." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas de serveur, pas de compte, pas de pistage. Vos données vivent uniquement sur votre iPhone et dans les liens de partage que vous décidez d'envoyer. Qui possède le lien peut voir la famille — ne le partagez qu'avec des personnes de confiance." } }
+    }},
+    "help.faq.title" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Good to know" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bon à savoir" } }
+    }},
+    "help.faq.body" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "• Photos are not transmitted via the link (too heavy). Use AirDrop or iMessage for that.\n• When you change something, re-share the link so your relatives get the update.\n• Each relative can also re-share their version: incoming changes are merged with yours.\n• Tap a member then 'This is me' to identify yourself on a shared phone." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "• Les photos ne passent pas par le lien (trop lourdes). Utilisez AirDrop ou iMessage pour ça.\n• Quand vous modifiez quelque chose, re-partagez le lien pour que vos proches reçoivent la mise à jour.\n• Chaque proche peut aussi re-partager sa version : les changements reçus sont fusionnés avec les vôtres.\n• Touchez un membre puis 'C'est moi' pour vous identifier sur un téléphone partagé." } }
+    }},
+    "help.footer" : { "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Made with ❤️ for families." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fait avec ❤️ pour les familles." } }
     }}
   }
 }

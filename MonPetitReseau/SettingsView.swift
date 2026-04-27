@@ -12,6 +12,7 @@ struct SettingsView: View {
     @State private var showImport = false
     @State private var importText = ""
     @State private var importResult: ImportResult?
+    @State private var showHelp = false
 
     enum ImportResult: Identifiable {
         case ok, fail
@@ -62,6 +63,11 @@ struct SettingsView: View {
                 }
 
                 Section("settings.section.about") {
+                    Button {
+                        showHelp = true
+                    } label: {
+                        Label("settings.help.button", systemImage: "questionmark.circle.fill")
+                    }
                     LabeledContent("settings.about.app", value: "MonPetitReseau 1.0")
                     LabeledContent("settings.about.members", value: "\(store.members.count)")
                     LabeledContent("settings.about.messages", value: "\(store.messages.count)")
@@ -86,6 +92,7 @@ struct SettingsView: View {
             }
             .navigationTitle("tab.settings")
             .onAppear { familyName = store.familyName }
+            .sheet(isPresented: $showHelp) { HelpView() }
             .alert("settings.import.title", isPresented: $showImport) {
                 TextField("settings.import.placeholder", text: $importText)
                     .textInputAutocapitalization(.never)

@@ -1,5 +1,5 @@
-const CACHE = 'mpr-v1';
-const ASSETS = ['./', './index.html', './manifest.json'];
+const CACHE = 'mpr-v2';
+const ASSETS = ['./', './index.html', './manifest.json', './pako.min.js', './icon.svg'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(()=>{}));
