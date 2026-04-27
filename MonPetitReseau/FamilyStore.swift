@@ -109,12 +109,16 @@ final class FamilyStore {
         members.append(m)
         if currentUserId == nil { currentUserId = m.id }
         save()
+        let fid = familyId
+        Task { await cloud.push(member: m, familyId: fid) }
     }
 
     func updateMember(_ m: FamilyMember) {
         guard let i = members.firstIndex(where: { $0.id == m.id }) else { return }
         members[i] = m
         save()
+        let fid = familyId
+        Task { await cloud.push(member: m, familyId: fid) }
     }
 
     func deleteMember(_ id: UUID) {
@@ -122,6 +126,7 @@ final class FamilyStore {
         messages.removeAll { $0.authorId == id }
         if currentUserId == id { currentUserId = members.first?.id }
         save()
+        Task { await cloud.deleteMember(id) }
     }
 
     func member(_ id: UUID?) -> FamilyMember? {
@@ -146,7 +151,7 @@ final class FamilyStore {
     func deleteMessage(_ id: UUID) {
         messages.removeAll { $0.id == id }
         save()
-        Task { await cloud.delete(messageId: id) }
+        Task { await cloud.deleteMessage(id) }
     }
 
     // MARK: - Cloud sync
@@ -162,15 +167,69 @@ final class FamilyStore {
         save()
     }
 
+    /// Pull every kind of record (messages, events, todos, members, photos)
+    /// modified since the last sync. Last-write-wins for items that already exist.
+    func syncAll() async {
+        async let newMessages = cloud.fetchNewMessages(familyId: familyId,
+                                                       knownIDs: Set(messages.map(\.id)))
+        async let updatedEvents = cloud.fetchEvents(familyId: familyId)
+        async let updatedTodos = cloud.fetchTodos(familyId: familyId)
+        async let updatedMembers = cloud.fetchMembers(familyId: familyId)
+        async let newPhotos = cloud.fetchPhotos(familyId: familyId,
+                                                knownIDs: Set(photos.map(\.id)))
+
+        let (msg, evt, td, mem, ph) = await (newMessages, updatedEvents,
+                                              updatedTodos, updatedMembers, newPhotos)
+        cloudStatus = cloud.status
+        var changed = false
+
+        if !msg.isEmpty {
+            messages.append(contentsOf: msg)
+            messages.sort { $0.date < $1.date }
+            changed = true
+        }
+        if !evt.isEmpty {
+            var map: [UUID: FamilyEvent] = Dictionary(uniqueKeysWithValues: events.map { ($0.id, $0) })
+            for e in evt { map[e.id] = e }
+            events = Array(map.values)
+            changed = true
+        }
+        if !td.isEmpty {
+            var map: [UUID: FamilyTodo] = Dictionary(uniqueKeysWithValues: todos.map { ($0.id, $0) })
+            for t in td { map[t.id] = t }
+            todos = Array(map.values)
+            changed = true
+        }
+        if !mem.isEmpty {
+            var map: [UUID: FamilyMember] = Dictionary(uniqueKeysWithValues: members.map { ($0.id, $0) })
+            for m in mem { map[m.id] = m }
+            members = Array(map.values).sorted { $0.fullName < $1.fullName }
+            changed = true
+        }
+        if !ph.isEmpty {
+            // Newest first to match the existing photo wall sort.
+            photos.insert(contentsOf: ph.sorted { $0.date > $1.date }, at: 0)
+            changed = true
+        }
+        if changed { save() }
+    }
+
     // MARK: - Events
 
-    func addEvent(_ e: FamilyEvent) { events.append(e); save() }
+    func addEvent(_ e: FamilyEvent) {
+        events.append(e); save()
+        let fid = familyId
+        Task { await cloud.push(event: e, familyId: fid) }
+    }
     func updateEvent(_ e: FamilyEvent) {
         guard let i = events.firstIndex(where: { $0.id == e.id }) else { return }
         events[i] = e; save()
+        let fid = familyId
+        Task { await cloud.push(event: e, familyId: fid) }
     }
     func deleteEvent(_ id: UUID) {
         events.removeAll { $0.id == id }; save()
+        Task { await cloud.deleteEvent(id) }
     }
 
     var upcomingEvents: [FamilyEvent] {
@@ -195,20 +254,34 @@ final class FamilyStore {
 
     // MARK: - Todos
 
-    func addTodo(_ t: FamilyTodo) { todos.append(t); save() }
+    func addTodo(_ t: FamilyTodo) {
+        todos.append(t); save()
+        let fid = familyId
+        Task { await cloud.push(todo: t, familyId: fid) }
+    }
     func toggleTodo(_ id: UUID) {
         guard let i = todos.firstIndex(where: { $0.id == id }) else { return }
-        todos[i].isDone.toggle(); save()
+        todos[i].isDone.toggle()
+        let updated = todos[i]
+        save()
+        let fid = familyId
+        Task { await cloud.push(todo: updated, familyId: fid) }
     }
     func deleteTodo(_ id: UUID) {
         todos.removeAll { $0.id == id }; save()
+        Task { await cloud.deleteTodo(id) }
     }
 
     // MARK: - Photos
 
-    func addPhoto(_ p: FamilyPhoto) { photos.insert(p, at: 0); save() }
+    func addPhoto(_ p: FamilyPhoto) {
+        photos.insert(p, at: 0); save()
+        let fid = familyId
+        Task { await cloud.push(photo: p, familyId: fid) }
+    }
     func deletePhoto(_ id: UUID) {
         photos.removeAll { $0.id == id }; save()
+        Task { await cloud.deletePhoto(id) }
     }
 
     // MARK: - Share / merge

@@ -32,7 +32,7 @@ struct MessagesView: View {
                         .padding()
                     }
                     .scrollDismissesKeyboard(.interactively)
-                    .refreshable { await store.syncMessages() }
+                    .refreshable { await store.syncAll() }
                     .onChange(of: store.messages.count) { _, _ in
                         if let last = store.messages.last {
                             withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
@@ -82,13 +82,13 @@ struct MessagesView: View {
                 }
             }
             .task {
-                await store.syncMessages()
+                await store.syncAll()
                 pollTask?.cancel()
                 pollTask = Task {
                     while !Task.isCancelled {
                         try? await Task.sleep(for: .seconds(8))
                         if Task.isCancelled { break }
-                        await store.syncMessages()
+                        await store.syncAll()
                     }
                 }
             }

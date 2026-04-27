@@ -17,10 +17,10 @@ struct MonPetitReseauApp: App {
             ContentView()
                 .environment(store)
                 .onOpenURL { store.importFromURL($0) }
-                .task { await store.syncMessages() }
+                .task { await store.syncAll() }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active {
-                        Task { await store.syncMessages() }
+                        Task { await store.syncAll() }
                     }
                 }
         }
