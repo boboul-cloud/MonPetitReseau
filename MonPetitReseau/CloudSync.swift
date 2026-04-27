@@ -182,6 +182,41 @@ final class CloudSync {
         catch { return false }
     }
 
+    // MARK: - Subscriptions (push notifications)
+
+    /// Create a silent CloudKit subscription per record type for the given familyId.
+    /// Apple will deliver a silent push to every device that called this whenever
+    /// a matching record is created/updated/deleted.
+    /// Idempotent — re-running with the same familyId is safe.
+    func registerSubscriptions(familyId: UUID) async {
+        let predicate = NSPredicate(format: "familyId == %@", familyId.uuidString)
+        let allTypes: [RecordType] = [.message, .event, .todo, .member, .photo]
+
+        for type in allTypes {
+            let subID = "sub-\(type.rawValue)-\(familyId.uuidString)"
+            let subscription = CKQuerySubscription(
+                recordType: type.rawValue,
+                predicate: predicate,
+                subscriptionID: subID,
+                options: [.firesOnRecordCreation, .firesOnRecordUpdate, .firesOnRecordDeletion]
+            )
+            let info = CKSubscription.NotificationInfo()
+            info.shouldSendContentAvailable = true     // silent push
+            info.alertBody = nil                        // we craft local notifs ourselves
+            subscription.notificationInfo = info
+
+            do {
+                _ = try await database.save(subscription)
+                log.info("Subscribed to \(type.rawValue) for family \(familyId.uuidString)")
+            } catch let error as CKError where error.code == .serverRejectedRequest {
+                // Already exists — that's fine.
+                log.debug("Subscription \(subID) already exists")
+            } catch {
+                log.error("Subscribe \(type.rawValue) failed: \(error.localizedDescription)")
+            }
+        }
+    }
+
     // MARK: - Generic helpers
 
     private func id(_ uuid: UUID) -> CKRecord.ID {

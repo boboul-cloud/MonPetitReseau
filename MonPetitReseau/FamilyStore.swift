@@ -169,7 +169,10 @@ final class FamilyStore {
 
     /// Pull every kind of record (messages, events, todos, members, photos)
     /// modified since the last sync. Last-write-wins for items that already exist.
-    func syncAll() async {
+    /// - Parameter notifyUser: when true, posts local notifications for the new
+    ///   records (used for background pushes). False on foreground refresh to
+    ///   avoid spamming the user with already-seen content.
+    func syncAll(notifyUser: Bool = false) async {
         async let newMessages = cloud.fetchNewMessages(familyId: familyId,
                                                        knownIDs: Set(messages.map(\.id)))
         async let updatedEvents = cloud.fetchEvents(familyId: familyId)
@@ -182,6 +185,12 @@ final class FamilyStore {
                                               updatedTodos, updatedMembers, newPhotos)
         cloudStatus = cloud.status
         var changed = false
+
+        // Track only items that are genuinely new for notification purposes.
+        let knownEventIDs = Set(events.map(\.id))
+        let knownTodoIDs = Set(todos.map(\.id))
+        let trulyNewEvents = evt.filter { !knownEventIDs.contains($0.id) }
+        let trulyNewTodos = td.filter { !knownTodoIDs.contains($0.id) }
 
         if !msg.isEmpty {
             messages.append(contentsOf: msg)
@@ -212,6 +221,36 @@ final class FamilyStore {
             changed = true
         }
         if changed { save() }
+
+        if notifyUser {
+            // Don't announce records authored by the current user (we already saw them locally).
+            let me = currentUserId
+            let foreignMessages = msg.filter { $0.authorId != me }
+            let foreignEvents = trulyNewEvents.filter { $0.createdBy != me }
+            let foreignTodos = trulyNewTodos.filter { $0.createdBy != me }
+            let foreignPhotos = ph.filter { $0.authorId != me }
+
+            if !foreignMessages.isEmpty || !foreignEvents.isEmpty
+                || !foreignTodos.isEmpty || !foreignPhotos.isEmpty {
+                let nameLookup: (UUID) -> String = { [weak self] uid in
+                    self?.member(uid)?.fullName ?? "?"
+                }
+                NotificationManager.announce(
+                    newMessages: foreignMessages,
+                    newEvents: foreignEvents,
+                    newTodos: foreignTodos,
+                    newPhotos: foreignPhotos,
+                    memberName: nameLookup
+                )
+            }
+        }
+    }
+
+    /// One-shot setup the first time the app comes online: register CloudKit
+    /// push subscriptions, then do an initial sync.
+    func bootstrapCloud() async {
+        await cloud.registerSubscriptions(familyId: familyId)
+        await syncAll(notifyUser: false)
     }
 
     // MARK: - Events

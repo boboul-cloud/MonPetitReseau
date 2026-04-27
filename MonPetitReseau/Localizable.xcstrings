@@ -189,6 +189,96 @@
         }
       }
     },
+    "notif.event.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Family calendar" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Agenda familial" }
+        }
+      }
+    },
+    "notif.event.one" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "%1$@ added: %2$@" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "%1$@ a ajouté : %2$@" }
+        }
+      }
+    },
+    "notif.event.many" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "%d new events" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "%d nouveaux événements" }
+        }
+      }
+    },
+    "notif.todo.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Family tasks" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Tâches familiales" }
+        }
+      }
+    },
+    "notif.todo.one" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "%1$@ added a task: %2$@" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "%1$@ a ajouté une tâche : %2$@" }
+        }
+      }
+    },
+    "notif.todo.many" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "%d new tasks" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "%d nouvelles tâches" }
+        }
+      }
+    },
+    "notif.photo.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "New photo" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "Nouvelle photo" }
+        }
+      }
+    },
+    "notif.photo.one" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "%@ shared a photo" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "%@ a partagé une photo" }
+        }
+      }
+    },
+    "notif.photo.many" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "%d new photos" }
+        },
+        "fr" : {
+          "stringUnit" : { "state" : "translated", "value" : "%d nouvelles photos" }
+        }
+      }
+    },
     "button.edit" : {
       "localizations" : {
         "en" : {
