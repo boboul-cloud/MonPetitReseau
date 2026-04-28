@@ -66,6 +66,9 @@ final class CloudSync {
         r["text"] = m.text as CKRecordValue
         r["date"] = m.date as CKRecordValue
         r["modifiedAt"] = Date() as CKRecordValue
+        if let aud = m.audienceIds, !aud.isEmpty {
+            r["audienceIds"] = aud.map(\.uuidString) as CKRecordValue
+        }
         await save(r)
     }
 
@@ -87,6 +90,9 @@ final class CloudSync {
         r["details"] = e.details as CKRecordValue
         r["createdBy"] = e.createdBy.uuidString as CKRecordValue
         r["modifiedAt"] = Date() as CKRecordValue
+        if let aud = e.audienceIds, !aud.isEmpty {
+            r["audienceIds"] = aud.map(\.uuidString) as CKRecordValue
+        }
         await save(r, savePolicy: .changedKeys)
     }
 
@@ -107,6 +113,9 @@ final class CloudSync {
         if let a = t.assignedTo { r["assignedTo"] = a.uuidString as CKRecordValue }
         r["date"] = t.date as CKRecordValue
         r["modifiedAt"] = Date() as CKRecordValue
+        if let aud = t.audienceIds, !aud.isEmpty {
+            r["audienceIds"] = aud.map(\.uuidString) as CKRecordValue
+        }
         await save(r, savePolicy: .changedKeys)
     }
 
@@ -162,6 +171,9 @@ final class CloudSync {
         r["date"] = p.date as CKRecordValue
         r["modifiedAt"] = Date() as CKRecordValue
         r["image"] = CKAsset(fileURL: tmp)
+        if let aud = p.audienceIds, !aud.isEmpty {
+            r["audienceIds"] = aud.map(\.uuidString) as CKRecordValue
+        }
 
         await save(r, savePolicy: .changedKeys)
         try? FileManager.default.removeItem(at: tmp)
@@ -370,7 +382,15 @@ final class CloudSync {
             let text = r["text"] as? String,
             let date = r["date"] as? Date
         else { return nil }
-        return FamilyMessage(id: id, authorId: authorID, text: text, date: date)
+        return FamilyMessage(id: id, authorId: authorID, text: text, date: date,
+                             audienceIds: decodeAudience(r))
+    }
+
+    /// Helper : decode the optional `audienceIds` string list into [UUID]?.
+    private func decodeAudience(_ r: CKRecord) -> [UUID]? {
+        guard let raw = r["audienceIds"] as? [String] else { return nil }
+        let ids = raw.compactMap(UUID.init(uuidString:))
+        return ids.isEmpty ? nil : ids
     }
 
     private func decodeEvent(_ r: CKRecord) -> FamilyEvent? {
@@ -384,7 +404,8 @@ final class CloudSync {
             let createdBy = UUID(uuidString: createdByStr)
         else { return nil }
         return FamilyEvent(id: id, title: title, date: date, location: location,
-                           details: details, createdBy: createdBy)
+                           details: details, createdBy: createdBy,
+                           audienceIds: decodeAudience(r))
     }
 
     private func decodeTodo(_ r: CKRecord) -> FamilyTodo? {
@@ -398,7 +419,8 @@ final class CloudSync {
         let isDone = (r["isDone"] as? Int64 ?? 0) != 0
         let assignedTo: UUID? = (r["assignedTo"] as? String).flatMap(UUID.init(uuidString:))
         return FamilyTodo(id: id, title: title, isDone: isDone,
-                          createdBy: createdBy, assignedTo: assignedTo, date: date)
+                          createdBy: createdBy, assignedTo: assignedTo, date: date,
+                          audienceIds: decodeAudience(r))
     }
 
     private func decodeMember(_ r: CKRecord) -> FamilyMember? {
@@ -435,6 +457,7 @@ final class CloudSync {
             let data = try? Data(contentsOf: url)
         else { return nil }
         return FamilyPhoto(id: id, authorId: authorID, caption: caption,
-                           date: date, imageData: data)
+                           date: date, imageData: data,
+                           audienceIds: decodeAudience(r))
     }
 }

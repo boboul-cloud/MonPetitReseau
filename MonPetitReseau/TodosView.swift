@@ -9,8 +9,8 @@ struct TodosView: View {
     @Environment(FamilyStore.self) var store
     @State private var showAdd = false
 
-    var pending: [FamilyTodo] { store.todos.filter { !$0.isDone }.sorted { $0.date > $1.date } }
-    var done: [FamilyTodo] { store.todos.filter { $0.isDone }.sorted { $0.date > $1.date } }
+    var pending: [FamilyTodo] { store.visibleTodos().filter { !$0.isDone }.sorted { $0.date > $1.date } }
+    var done: [FamilyTodo] { store.visibleTodos().filter { $0.isDone }.sorted { $0.date > $1.date } }
 
     var body: some View {
         NavigationStack {
@@ -65,6 +65,7 @@ struct TodosView: View {
                     if let to = store.member(t.assignedTo) {
                         Text("→ \(to.fullName)").font(.caption2).foregroundStyle(.tertiary)
                     }
+                    AudienceBadge(audienceIds: t.audienceIds)
                 }
             }
             Spacer()
@@ -79,12 +80,16 @@ struct TodoAddView: View {
 
     @State private var title = ""
     @State private var assignedTo: UUID?
+    @State private var audienceIds: [UUID]? = nil
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("field.title", text: $title)
                 OptionalMemberPicker(label: "field.assignedTo", selection: $assignedTo)
+                Section {
+                    AudiencePicker(selectedIds: $audienceIds)
+                }
             }
             .navigationTitle("add.todo.title")
             .navigationBarTitleDisplayMode(.inline)
@@ -96,7 +101,9 @@ struct TodoAddView: View {
                     Button("button.save") {
                         guard let uid = store.currentUserId else { dismiss(); return }
                         store.addTodo(FamilyTodo(
-                            title: title, createdBy: uid, assignedTo: assignedTo
+                            title: title, createdBy: uid,
+                            assignedTo: assignedTo,
+                            audienceIds: audienceIds
                         ))
                         dismiss()
                     }

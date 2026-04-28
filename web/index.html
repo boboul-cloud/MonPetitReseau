@@ -226,6 +226,28 @@ if (!meId && wire.members.length > 0) meId = wire.members[0].id;
 // ---------- Helpers ----------
 
 const memberById = id => wire.members.find(m => m.id === id);
+
+// v3 : items may be restricted to a subset of members. nil/empty audienceIds = visible to everyone.
+const visibleTo = item => {
+  const aud = item.audienceIds;
+  if (!aud || aud.length === 0) return true;
+  return meId ? aud.includes(meId) : false;
+};
+const audienceLabel = item => {
+  const aud = item.audienceIds;
+  if (!aud || aud.length === 0) return '';
+  const circles = wire.circles || [];
+  const setEq = (a, b) => a.length === b.length && a.every(x => b.includes(x));
+  const c = circles.find(c => setEq(c.memberIds || [], aud));
+  if (c) return c.name;
+  const names = aud.map(id => (memberById(id) || {}).firstName).filter(Boolean);
+  const head = names.slice(0, 3).join(', ');
+  return names.length > 3 ? `${head} +${names.length - 3}` : head;
+};
+const audienceBadgeHTML = item =>
+  visibleTo(item) && item.audienceIds && item.audienceIds.length
+    ? `<span class="audience">🔒 ${escape(audienceLabel(item))}</span>` : '';
+
 const fmtDate = ts => new Date(ts * 1000).toLocaleDateString('fr-FR',
   { day: 'numeric', month: 'long', year: 'numeric' });
 const fmtDateTime = ts => new Date(ts * 1000).toLocaleString('fr-FR',
@@ -305,10 +327,11 @@ function renderMembers() {
 }
 
 function renderWall() {
-  if (!wire.messages.length) {
+  const visible = wire.messages.filter(visibleTo);
+  if (!visible.length) {
     return '<div class="empty">Aucun message.<br>Soyez le premier à écrire !</div>';
   }
-  const sorted = [...wire.messages].sort((a,b) => a.date - b.date);
+  const sorted = [...visible].sort((a,b) => a.date - b.date);
   return sorted.map(msg => {
     const author = memberById(msg.authorId);
     const isMe = msg.authorId === meId;
@@ -318,7 +341,7 @@ function renderWall() {
         <div>
           ${!isMe && author ? `<div class="muted" style="font-size:0.7em;margin-bottom:2px">${escape(author.firstName)}</div>` : ''}
           <div class="bubble">${escape(msg.text)}</div>
-          <div class="meta">${fmtRelative(msg.date)}</div>
+          <div class="meta">${fmtRelative(msg.date)} ${audienceBadgeHTML(msg)}</div>
         </div>
       </div>
     `;
@@ -350,9 +373,10 @@ function renderEvents() {
     html += '</div>';
   }
 
-  if (!wire.events.length && !cal.length) return '<div class="empty">Aucun événement.</div>';
+  const visibleEvents = wire.events.filter(visibleTo);
+  if (!visibleEvents.length && !cal.length) return '<div class="empty">Aucun événement.</div>';
 
-  const events = [...wire.events].sort((a,b) => a.date - b.date);
+  const events = [...visibleEvents].sort((a,b) => a.date - b.date);
   events.forEach(e => {
     const d = new Date(e.date * 1000);
     html += `
@@ -362,7 +386,7 @@ function renderEvents() {
           <div class="m">${d.toLocaleDateString('fr-FR',{month:'short'}).replace('.','')}</div>
         </div>
         <div style="flex:1">
-          <div class="name">${escape(e.title)}</div>
+          <div class="name">${escape(e.title)} ${audienceBadgeHTML(e)}</div>
           ${e.location ? `<div class="muted">📍 ${escape(e.location)}</div>` : ''}
           <div class="muted">${d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}</div>
           ${e.details ? `<div class="muted" style="margin-top:4px">${escape(e.details)}</div>` : ''}
@@ -373,9 +397,10 @@ function renderEvents() {
 }
 
 function renderTodos() {
-  if (!wire.todos.length) return '<div class="empty">Aucune tâche.</div>';
-  const pending = wire.todos.filter(t => !t.isDone);
-  const done = wire.todos.filter(t => t.isDone);
+  const visible = wire.todos.filter(visibleTo);
+  if (!visible.length) return '<div class="empty">Aucune tâche.</div>';
+  const pending = visible.filter(t => !t.isDone);
+  const done = visible.filter(t => t.isDone);
   let html = '';
   if (pending.length) {
     html += '<div class="card"><div class="muted" style="margin-bottom:8px">À faire</div>';

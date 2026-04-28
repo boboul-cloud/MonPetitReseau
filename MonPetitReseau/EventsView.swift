@@ -31,7 +31,7 @@ struct EventsView: View {
                 }
 
                 Section("events.section.events") {
-                    if store.events.isEmpty {
+                    if store.upcomingEvents.isEmpty {
                         Text("events.empty").foregroundStyle(.secondary)
                     } else {
                         ForEach(store.upcomingEvents) { e in
@@ -76,8 +76,11 @@ struct EventsView: View {
                     Label(e.location, systemImage: "mappin.and.ellipse")
                         .font(.caption).foregroundStyle(.secondary)
                 }
-                Text(e.date, format: .dateTime.hour().minute())
-                    .font(.caption2).foregroundStyle(.tertiary)
+                HStack(spacing: 6) {
+                    Text(e.date, format: .dateTime.hour().minute())
+                        .font(.caption2).foregroundStyle(.tertiary)
+                    AudienceBadge(audienceIds: e.audienceIds)
+                }
             }
             Spacer()
         }
@@ -96,6 +99,7 @@ struct EventEditView: View {
     @State private var date = Date()
     @State private var location = ""
     @State private var details = ""
+    @State private var audienceIds: [UUID]? = nil
 
     var isEditing: Bool { if case .edit = mode { return true } else { return false } }
 
@@ -107,6 +111,10 @@ struct EventEditView: View {
                 TextField("field.location", text: $location)
                 TextField("field.details", text: $details, axis: .vertical)
                     .lineLimit(2...6)
+
+                Section {
+                    AudiencePicker(selectedIds: $audienceIds)
+                }
 
                 if isEditing {
                     Section {
@@ -129,11 +137,13 @@ struct EventEditView: View {
                             guard let uid = store.currentUserId else { dismiss(); return }
                             store.addEvent(FamilyEvent(
                                 title: title, date: date, location: location,
-                                details: details, createdBy: uid
+                                details: details, createdBy: uid,
+                                audienceIds: audienceIds
                             ))
                         case .edit(var e):
                             e.title = title; e.date = date
                             e.location = location; e.details = details
+                            e.audienceIds = audienceIds
                             store.updateEvent(e)
                         }
                         dismiss()
@@ -145,6 +155,7 @@ struct EventEditView: View {
                 if case .edit(let e) = mode {
                     title = e.title; date = e.date
                     location = e.location; details = e.details
+                    audienceIds = e.audienceIds
                 }
             }
         }

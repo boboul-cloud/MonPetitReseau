@@ -8,8 +8,12 @@ import SwiftUI
 struct MessagesView: View {
     @Environment(FamilyStore.self) var store
     @State private var draft = ""
+    @State private var draftAudience: [UUID]? = nil
+    @State private var showAudience = false
     @FocusState private var focused: Bool
     @State private var pollTask: Task<Void, Never>?
+
+    var visible: [FamilyMessage] { store.visibleMessages() }
 
     var body: some View {
         NavigationStack {
@@ -17,7 +21,7 @@ struct MessagesView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(spacing: 10) {
-                            ForEach(store.messages) { msg in
+                            ForEach(visible) { msg in
                                 MessageBubble(message: msg,
                                               isMe: msg.authorId == store.currentUserId,
                                               author: store.member(msg.authorId))
@@ -33,13 +37,13 @@ struct MessagesView: View {
                     }
                     .scrollDismissesKeyboard(.interactively)
                     .refreshable { await store.syncAll() }
-                    .onChange(of: store.messages.count) { _, _ in
-                        if let last = store.messages.last {
+                    .onChange(of: visible.count) { _, _ in
+                        if let last = visible.last {
                             withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
                         }
                     }
                     .onAppear {
-                        if let last = store.messages.last {
+                        if let last = visible.last {
                             proxy.scrollTo(last.id, anchor: .bottom)
                         }
                     }
@@ -47,28 +51,49 @@ struct MessagesView: View {
 
                 Divider()
 
-                HStack(alignment: .bottom, spacing: 8) {
-                    TextField("messages.placeholder", text: $draft, axis: .vertical)
-                        .lineLimit(1...5)
-                        .padding(10)
-                        .background(Color(.secondarySystemBackground),
-                                    in: RoundedRectangle(cornerRadius: 18))
-                        .focused($focused)
-                    Button {
-                        store.postMessage(draft)
-                        draft = ""
-                        focused = false
-                    } label: {
-                        Image(systemName: "paperplane.fill")
-                            .font(.title3)
-                            .padding(10)
-                            .background(Circle().fill(Color.accentColor))
-                            .foregroundStyle(.white)
+                VStack(spacing: 6) {
+                    if draftAudience != nil {
+                        HStack {
+                            AudienceBadge(audienceIds: draftAudience)
+                            Spacer()
+                            Button("audience.clear") { draftAudience = nil }
+                                .font(.caption2)
+                        }
+                        .padding(.horizontal)
                     }
-                    .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                              || store.currentUserId == nil)
+                    HStack(alignment: .bottom, spacing: 8) {
+                        Button {
+                            showAudience = true
+                        } label: {
+                            Image(systemName: draftAudience == nil ? "eye" : "lock.fill")
+                                .font(.title3)
+                                .padding(10)
+                                .background(Circle().fill(Color(.secondarySystemBackground)))
+                                .foregroundStyle(draftAudience == nil ? .secondary : Color.accentColor)
+                        }
+                        TextField("messages.placeholder", text: $draft, axis: .vertical)
+                            .lineLimit(1...5)
+                            .padding(10)
+                            .background(Color(.secondarySystemBackground),
+                                        in: RoundedRectangle(cornerRadius: 18))
+                            .focused($focused)
+                        Button {
+                            store.postMessage(draft, audienceIds: draftAudience)
+                            draft = ""
+                            focused = false
+                        } label: {
+                            Image(systemName: "paperplane.fill")
+                                .font(.title3)
+                                .padding(10)
+                                .background(Circle().fill(Color.accentColor))
+                                .foregroundStyle(.white)
+                        }
+                        .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                  || store.currentUserId == nil)
+                    }
+                    .padding(.horizontal).padding(.bottom)
                 }
-                .padding()
+                .padding(.top, 6)
             }
             .navigationTitle("tab.messages")
             .navigationBarTitleDisplayMode(.inline)
@@ -80,6 +105,9 @@ struct MessagesView: View {
                     Spacer()
                     Button("button.done") { focused = false }
                 }
+            }
+            .sheet(isPresented: $showAudience) {
+                AudienceChooserSheet(selectedIds: $draftAudience)
             }
             .task {
                 await store.syncAll()
@@ -94,7 +122,7 @@ struct MessagesView: View {
             }
             .onDisappear { pollTask?.cancel() }
             .overlay {
-                if store.messages.isEmpty {
+                if visible.isEmpty {
                     ContentUnavailableView("messages.empty.title",
                                            systemImage: "bubble.left",
                                            description: Text("messages.empty.subtitle"))
@@ -143,8 +171,11 @@ struct MessageBubble: View {
                         in: RoundedRectangle(cornerRadius: 16)
                     )
                     .foregroundStyle(isMe ? .white : .primary)
-                Text(message.date, format: .relative(presentation: .named))
-                    .font(.caption2).foregroundStyle(.tertiary)
+                HStack(spacing: 6) {
+                    Text(message.date, format: .relative(presentation: .named))
+                        .font(.caption2).foregroundStyle(.tertiary)
+                    AudienceBadge(audienceIds: message.audienceIds)
+                }
             }
 
             if isMe { AvatarView(member: author, size: 30) }

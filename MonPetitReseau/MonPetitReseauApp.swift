@@ -13,8 +13,8 @@ import UserNotifications
 
 final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
-    /// The store is wired in by the SwiftUI App once it's available.
-    @MainActor static weak var sharedStore: FamilyStore?
+    /// The app store is wired in by the SwiftUI App once it's available.
+    @MainActor static weak var sharedAppStore: AppStore?
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -25,10 +25,9 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     func application(_ application: UIApplication,
                      didReceiveRemoteNotification userInfo: [AnyHashable : Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        // CloudKit sent us a silent push : pull whatever changed.
+        // CloudKit silent push : pull whatever changed across every group.
         Task { @MainActor in
-            let store = AppDelegate.sharedStore
-            await store?.syncAll(notifyUser: true)
+            await AppDelegate.sharedAppStore?.syncAll(notifyUser: true)
             completionHandler(.newData)
         }
     }
@@ -44,30 +43,27 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
 
 @main
 struct MonPetitReseauApp: App {
-    @State private var store = FamilyStore()
+    @State private var appStore = AppStore()
     @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-
-    init() {
-        // No-op : the store is created above as @State.
-    }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(store)
-                .onOpenURL { store.importFromURL($0) }
+                .environment(appStore)
+                .environment(appStore.active)
+                .id(appStore.active.familyId) // re-mount tabs when switching groups
+                .onOpenURL { _ = appStore.importFromURL($0) }
                 .task {
-                    AppDelegate.sharedStore = store
+                    AppDelegate.sharedAppStore = appStore
                     await NotificationManager.requestAuthorizationIfNeeded()
-                    await store.bootstrapCloud()
+                    await appStore.bootstrapAllGroups()
                 }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active {
-                        Task { await store.syncAll(notifyUser: false) }
+                        Task { await appStore.syncAll(notifyUser: false) }
                     }
                 }
         }
     }
 }
-

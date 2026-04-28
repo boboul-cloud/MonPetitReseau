@@ -10,6 +10,16 @@
 		BFAA000820000000000000A1 /* NotificationService.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BFAA000020000000000000A1 /* NotificationService.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		BFAA000920000000000000A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF1DD7652F9F99B300EF298C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BFAA000320000000000000A1;
+			remoteInfo = NotificationService;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		BFAA000720000000000000A1 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -23,24 +33,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
-
-/* Begin PBXContainerItemProxy section */
-		BFAA000920000000000000A1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BF1DD7652F9F99B300EF298C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BFAA000320000000000000A1;
-			remoteInfo = NotificationService;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXTargetDependency section */
-		BFAA000A20000000000000A1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = BFAA000320000000000000A1 /* NotificationService */;
-			targetProxy = BFAA000920000000000000A1 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXFileReference section */
 		BF1DD76D2F9F99B300EF298C /* MonPetitReseau.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MonPetitReseau.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -59,7 +51,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				NotificationService.entitlements,
 			);
 			target = BFAA000320000000000000A1 /* NotificationService */;
 		};
@@ -238,6 +229,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BFAA000A20000000000000A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BFAA000320000000000000A1 /* NotificationService */;
+			targetProxy = BFAA000920000000000000A1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		BF1DD7762F9F99B400EF298C /* Debug */ = {

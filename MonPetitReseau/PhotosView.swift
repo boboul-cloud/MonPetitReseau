@@ -10,30 +10,40 @@ struct PhotosView: View {
     @Environment(FamilyStore.self) var store
     @State private var pickerItem: PhotosPickerItem?
     @State private var pendingImage: Data?
-    @State private var showCaption = false
-    @State private var caption = ""
+    @State private var showCaptionSheet = false
     @State private var preview: FamilyPhoto?
 
     private let cols = [GridItem(.adaptive(minimum: 110), spacing: 4)]
 
+    var visible: [FamilyPhoto] { store.visiblePhotos() }
+
     var body: some View {
         NavigationStack {
             Group {
-                if store.photos.isEmpty {
+                if visible.isEmpty {
                     ContentUnavailableView("photos.empty.title",
                                            systemImage: "photo",
                                            description: Text("photos.empty.subtitle"))
                 } else {
                     ScrollView {
                         LazyVGrid(columns: cols, spacing: 4) {
-                            ForEach(store.photos) { p in
+                            ForEach(visible) { p in
                                 if let ui = UIImage(data: p.imageData) {
-                                    Image(uiImage: ui)
-                                        .resizable().scaledToFill()
-                                        .frame(width: 110, height: 110)
-                                        .clipped()
-                                        .cornerRadius(6)
-                                        .onTapGesture { preview = p }
+                                    ZStack(alignment: .topTrailing) {
+                                        Image(uiImage: ui)
+                                            .resizable().scaledToFill()
+                                            .frame(width: 110, height: 110)
+                                            .clipped()
+                                            .cornerRadius(6)
+                                        if p.audienceIds != nil {
+                                            Image(systemName: "lock.fill")
+                                                .font(.caption2)
+                                                .padding(4)
+                                                .background(.ultraThinMaterial, in: Circle())
+                                                .padding(4)
+                                        }
+                                    }
+                                    .onTapGesture { preview = p }
                                 }
                             }
                         }
@@ -55,21 +65,23 @@ struct PhotosView: View {
                     if let data = try? await item.loadTransferable(type: Data.self),
                        let resized = compress(data) {
                         pendingImage = resized
-                        caption = ""
-                        showCaption = true
+                        showCaptionSheet = true
                     }
                     pickerItem = nil
                 }
             }
-            .alert("photos.caption.title", isPresented: $showCaption) {
-                TextField("photos.caption.placeholder", text: $caption)
-                Button("button.save") {
-                    if let data = pendingImage, let uid = store.currentUserId {
-                        store.addPhoto(FamilyPhoto(authorId: uid, caption: caption, imageData: data))
+            .sheet(isPresented: $showCaptionSheet, onDismiss: { pendingImage = nil }) {
+                if let data = pendingImage {
+                    PhotoCaptionSheet(imageData: data) { caption, audience in
+                        if let uid = store.currentUserId {
+                            store.addPhoto(FamilyPhoto(authorId: uid,
+                                                       caption: caption,
+                                                       imageData: data,
+                                                       audienceIds: audience))
+                        }
+                        pendingImage = nil
                     }
-                    pendingImage = nil
                 }
-                Button("button.cancel", role: .cancel) { pendingImage = nil }
             }
             .sheet(item: $preview) { p in
                 PhotoDetailView(photo: p)
@@ -89,6 +101,48 @@ struct PhotosView: View {
     }
 }
 
+struct PhotoCaptionSheet: View {
+    @Environment(\.dismiss) var dismiss
+    let imageData: Data
+    let onSave: (String, [UUID]?) -> Void
+    @State private var caption = ""
+    @State private var audienceIds: [UUID]? = nil
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                if let ui = UIImage(data: imageData) {
+                    Section {
+                        Image(uiImage: ui)
+                            .resizable().scaledToFit()
+                            .frame(maxHeight: 200)
+                    }
+                }
+                Section("photos.caption.title") {
+                    TextField("photos.caption.placeholder", text: $caption, axis: .vertical)
+                        .lineLimit(1...4)
+                }
+                Section {
+                    AudiencePicker(selectedIds: $audienceIds)
+                }
+            }
+            .navigationTitle("photos.add.title")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("button.cancel") { dismiss() }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("button.save") {
+                        onSave(caption, audienceIds)
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct PhotoDetailView: View {
     @Environment(FamilyStore.self) var store
     @Environment(\.dismiss) var dismiss
@@ -104,6 +158,8 @@ struct PhotoDetailView: View {
                 if !photo.caption.isEmpty {
                     Text(photo.caption).font(.body).padding()
                 }
+                AudienceBadge(audienceIds: photo.audienceIds)
+                    .padding(.horizontal)
                 if let by = store.member(photo.authorId) {
                     HStack {
                         AvatarView(member: by, size: 28)
