@@ -433,9 +433,19 @@ final class FamilyStore {
     // MARK: - Share / merge
 
     func makeWire() -> FamilyWire {
-        FamilyWire(
+        // Drop avatar bytes from the share payload — they are JPEG (already
+        // compressed, so zlib can't shrink them) and inflated by ~33% via
+        // JSON base64 encoding, which can quickly push the URL past the
+        // SMS/iMessage practical length limit. Photos still travel between
+        // iPhones over CloudKit ; the web companion falls back to emojis.
+        let lightMembers = members.map { m -> FamilyMember in
+            var copy = m
+            copy.avatarData = nil
+            return copy
+        }
+        return FamilyWire(
             familyId: familyId,
-            members: members,
+            members: lightMembers,
             messages: messages,
             events: events,
             todos: todos,
@@ -455,7 +465,15 @@ final class FamilyStore {
         }
 
         var memberMap: [UUID: FamilyMember] = Dictionary(uniqueKeysWithValues: members.map { ($0.id, $0) })
-        for m in wire.members { memberMap[m.id] = m }
+        for var m in wire.members {
+            // The share wire strips avatar bytes to keep URLs short. Don't let
+            // that nil overwrite an avatar we already have locally (or one we
+            // have already received via CloudKit).
+            if m.avatarData == nil, let existing = memberMap[m.id]?.avatarData {
+                m.avatarData = existing
+            }
+            memberMap[m.id] = m
+        }
         members = Array(memberMap.values).sorted { $0.fullName < $1.fullName }
 
         var msgIds = Set(messages.map(\.id))
