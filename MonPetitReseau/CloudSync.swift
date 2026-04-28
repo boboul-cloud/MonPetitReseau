@@ -128,6 +128,20 @@ final class CloudSync {
     // MARK: - Public API : Members
 
     func push(member m: FamilyMember, familyId: UUID) async {
+        let r = makeMemberRecord(m, familyId: familyId)
+        await save(r, savePolicy: .changedKeys)
+    }
+
+    /// Push the group creator's member record, embedding `groupCreator: 1`
+    /// and the current `editorIds` so other devices learn the permissions.
+    func pushOwner(member m: FamilyMember, familyId: UUID, editorIds: [UUID]) async {
+        let r = makeMemberRecord(m, familyId: familyId)
+        r["groupCreator"] = 1 as CKRecordValue
+        r["editorIds"] = editorIds.map(\.uuidString) as CKRecordValue
+        await save(r, savePolicy: .changedKeys)
+    }
+
+    private func makeMemberRecord(_ m: FamilyMember, familyId: UUID) -> CKRecord {
         let r = CKRecord(recordType: RecordType.member.rawValue, recordID: id(m.id))
         r["familyId"] = familyId.uuidString as CKRecordValue
         r["firstName"] = m.firstName as CKRecordValue
@@ -142,12 +156,39 @@ final class CloudSync {
         if let v = m.motherId { r["motherId"] = v.uuidString as CKRecordValue }
         if let v = m.fatherId { r["fatherId"] = v.uuidString as CKRecordValue }
         if let v = m.partnerId { r["partnerId"] = v.uuidString as CKRecordValue }
+        if let av = m.avatarData { r["avatar"] = av as CKRecordValue }
         r["modifiedAt"] = Date() as CKRecordValue
-        await save(r, savePolicy: .changedKeys)
+        return r
     }
 
     func fetchMembers(familyId: UUID) async -> [FamilyMember] {
         await fetchSince(.member, familyId: familyId).compactMap(decodeMember)
+    }
+
+    /// Fetch members along with the group's creator id and editor list, both of
+    /// which are stored on the creator's Member record.
+    struct MembersAndMeta {
+        var members: [FamilyMember]
+        var creatorId: UUID?
+        var editorIds: [UUID]?
+    }
+
+    func fetchMembersWithMeta(familyId: UUID) async -> MembersAndMeta {
+        let records = await fetchSince(.member, familyId: familyId)
+        var members: [FamilyMember] = []
+        var creatorId: UUID?
+        var editorIds: [UUID]?
+        for r in records {
+            if let m = decodeMember(r) { members.append(m) }
+            if let flag = r["groupCreator"] as? Int64, flag != 0,
+               let id = UUID(uuidString: r.recordID.recordName) {
+                creatorId = id
+                if let raw = r["editorIds"] as? [String] {
+                    editorIds = raw.compactMap(UUID.init(uuidString:))
+                }
+            }
+        }
+        return MembersAndMeta(members: members, creatorId: creatorId, editorIds: editorIds)
     }
 
     func deleteMember(_ id: UUID) async { await delete(.member, id: id) }
@@ -438,11 +479,13 @@ final class CloudSync {
         let mom: UUID? = (r["motherId"] as? String).flatMap(UUID.init(uuidString:))
         let dad: UUID? = (r["fatherId"] as? String).flatMap(UUID.init(uuidString:))
         let part: UUID? = (r["partnerId"] as? String).flatMap(UUID.init(uuidString:))
+        let avatar = r["avatar"] as? Data
         return FamilyMember(id: id, firstName: first, lastName: last, emoji: emoji,
                             birthDate: r["birthDate"] as? Date,
                             phone: phone, email: email, city: city,
                             role: role, bio: bio,
-                            motherId: mom, fatherId: dad, partnerId: part)
+                            motherId: mom, fatherId: dad, partnerId: part,
+                            avatarData: avatar)
     }
 
     private func decodePhoto(_ r: CKRecord) -> FamilyPhoto? {

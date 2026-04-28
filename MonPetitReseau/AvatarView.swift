@@ -11,17 +11,23 @@ struct AvatarView: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(
-                colors: gradientColors,
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
-            if let m = member, !m.emoji.isEmpty {
-                Text(m.emoji)
-                    .font(.system(size: size * 0.55))
+            if let data = member?.avatarData, let ui = UIImage(data: data) {
+                Image(uiImage: ui)
+                    .resizable()
+                    .scaledToFill()
             } else {
-                Text(member?.initials ?? "?")
-                    .font(.system(size: size * 0.4, weight: .semibold))
-                    .foregroundStyle(.white)
+                LinearGradient(
+                    colors: gradientColors,
+                    startPoint: .topLeading, endPoint: .bottomTrailing
+                )
+                if let m = member, !m.emoji.isEmpty {
+                    Text(m.emoji)
+                        .font(.system(size: size * 0.55))
+                } else {
+                    Text(member?.initials ?? "?")
+                        .font(.system(size: size * 0.4, weight: .semibold))
+                        .foregroundStyle(.white)
+                }
             }
         }
         .frame(width: size, height: size)

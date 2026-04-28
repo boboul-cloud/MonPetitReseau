@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct DirectoryView: View {
     @Environment(FamilyStore.self) var store
@@ -48,6 +49,7 @@ struct DirectoryView: View {
                         }
                     }
                     .onDelete { idx in
+                        guard store.canEditByCurrentUser else { return }
                         for i in idx { store.deleteMember(filtered[i].id) }
                     }
                 }
@@ -60,10 +62,13 @@ struct DirectoryView: View {
                 if let m = store.member(id) { MemberDetailView(memberId: m.id) }
             }
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button { showAdd = true } label: { Image(systemName: "person.badge.plus") }
+                if store.canEditByCurrentUser {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button { showAdd = true } label: { Image(systemName: "person.badge.plus") }
+                    }
                 }
             }
+            .readOnlyBanner(if: !store.canEditByCurrentUser)
             .sheet(isPresented: $showAdd) {
                 MemberEditView(mode: .add)
             }
@@ -175,8 +180,10 @@ struct MemberDetailView: View {
         .navigationTitle(member?.fullName ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .primaryAction) {
-                Button("button.edit") { showEdit = true }
+            if store.canEditByCurrentUser {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("button.edit") { showEdit = true }
+                }
             }
         }
         .sheet(isPresented: $showEdit) {
@@ -234,6 +241,8 @@ struct MemberEditView: View {
     @State private var motherId: UUID?
     @State private var fatherId: UUID?
     @State private var partnerId: UUID?
+    @State private var avatarData: Data?
+    @State private var photoItem: PhotosPickerItem?
 
     private let emojis = ["🙂","😀","😎","🥳","🧔","👨","👩","🧑","👴","👵","👶","🧓","👧","👦","🦊","🐱","🐶","🦁","🐼","🦄"]
 
@@ -245,6 +254,12 @@ struct MemberEditView: View {
         NavigationStack {
             Form {
                 Section("section.identity") {
+                    AvatarPickerRow(
+                        avatarData: $avatarData,
+                        photoItem: $photoItem,
+                        emoji: emoji,
+                        previewMember: previewMember
+                    )
                     EmojiPicker(selected: $emoji, options: emojis)
                     TextField("field.firstName", text: $firstName)
                     TextField("field.lastName", text: $lastName)
@@ -279,7 +294,7 @@ struct MemberEditView: View {
                         .lineLimit(3...8)
                 }
 
-                if isEditing {
+                if isEditing && store.canEditByCurrentUser {
                     Section {
                         Button(role: .destructive) {
                             if case .edit(let m) = mode {
@@ -310,9 +325,40 @@ struct MemberEditView: View {
                     phone = m.phone; email = m.email; city = m.city
                     role = m.role; bio = m.bio
                     motherId = m.motherId; fatherId = m.fatherId; partnerId = m.partnerId
+                    avatarData = m.avatarData
+                }
+            }
+            .onChange(of: photoItem) { _, newItem in
+                guard let newItem else { return }
+                Task {
+                    if let data = try? await newItem.loadTransferable(type: Data.self),
+                       let resized = Self.resizeAvatar(data) {
+                        await MainActor.run { avatarData = resized }
+                    }
                 }
             }
         }
+    }
+
+    private var previewMember: FamilyMember {
+        FamilyMember(firstName: firstName, lastName: lastName, emoji: emoji,
+                     phone: "", email: "", city: "", role: "", bio: "",
+                     avatarData: avatarData)
+    }
+
+    /// Resizes the picked image down to ~96px square JPEG to keep wire size tiny.
+    static func resizeAvatar(_ data: Data) -> Data? {
+        guard let img = UIImage(data: data) else { return nil }
+        let target: CGFloat = 96
+        let scale = max(target / img.size.width, target / img.size.height)
+        let newSize = CGSize(width: img.size.width * scale, height: img.size.height * scale)
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: target, height: target))
+        let cropped = renderer.image { _ in
+            let origin = CGPoint(x: (target - newSize.width) / 2,
+                                 y: (target - newSize.height) / 2)
+            img.draw(in: CGRect(origin: origin, size: newSize))
+        }
+        return cropped.jpegData(compressionQuality: 0.7)
     }
 
     private func commit() {
@@ -323,7 +369,8 @@ struct MemberEditView: View {
                 birthDate: hasBirthDate ? birthDate : nil,
                 phone: phone, email: email, city: city,
                 role: role, bio: bio,
-                motherId: motherId, fatherId: fatherId, partnerId: partnerId
+                motherId: motherId, fatherId: fatherId, partnerId: partnerId,
+                avatarData: avatarData
             )
             store.addMember(m)
         case .edit(var m):
@@ -332,6 +379,7 @@ struct MemberEditView: View {
             m.phone = phone; m.email = email; m.city = city
             m.role = role; m.bio = bio
             m.motherId = motherId; m.fatherId = fatherId; m.partnerId = partnerId
+            m.avatarData = avatarData
             store.updateMember(m)
         }
         dismiss()
@@ -350,5 +398,39 @@ struct OptionalMemberPicker: View {
                 Text(m.fullName).tag(UUID?.some(m.id))
             }
         }
+    }
+}
+
+// MARK: - Avatar picker (photo or emoji fallback)
+
+struct AvatarPickerRow: View {
+    @Binding var avatarData: Data?
+    @Binding var photoItem: PhotosPickerItem?
+    let emoji: String
+    let previewMember: FamilyMember
+
+    var body: some View {
+        HStack(spacing: 14) {
+            AvatarView(member: previewMember, size: 72)
+            VStack(alignment: .leading, spacing: 8) {
+                PhotosPicker(selection: $photoItem,
+                             matching: .images,
+                             photoLibrary: .shared()) {
+                    Label(avatarData == nil ? "avatar.choosePhoto" : "avatar.changePhoto",
+                          systemImage: "photo.on.rectangle")
+                }
+                if avatarData != nil {
+                    Button(role: .destructive) {
+                        avatarData = nil
+                        photoItem = nil
+                    } label: {
+                        Label("avatar.removePhoto", systemImage: "xmark.circle")
+                    }
+                    .font(.footnote)
+                }
+            }
+            Spacer()
+        }
+        .padding(.vertical, 4)
     }
 }

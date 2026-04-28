@@ -26,6 +26,12 @@ final class FamilyStore {
     var currentUserId: UUID?
     var circles: [ShareCircle]
 
+    /// Member id of the group creator (the one who initially created it).
+    /// Migrated/legacy groups have nil → treated as "no owner" (everyone can edit).
+    var createdBy: UUID?
+    /// Members the creator has granted edit permission to (in addition to themselves).
+    var editorIds: [UUID]
+
     /// CloudKit sync layer (lazy: only used when actively messaging).
     let cloud = CloudSync()
     /// Surface-level status for the UI.
@@ -48,6 +54,8 @@ final class FamilyStore {
         self.photos = []
         self.currentUserId = nil
         self.circles = []
+        self.createdBy = nil
+        self.editorIds = []
     }
 
     /// Restore from a persisted snapshot.
@@ -61,6 +69,8 @@ final class FamilyStore {
         self.photos = s.photos
         self.currentUserId = s.currentUserId
         self.circles = s.circles ?? []
+        self.createdBy = s.createdBy
+        self.editorIds = s.editorIds ?? []
     }
 
     // MARK: - Persistence
@@ -77,7 +87,9 @@ final class FamilyStore {
             todos: todos,
             photos: photos,
             currentUserId: currentUserId,
-            circles: circles
+            circles: circles,
+            createdBy: createdBy,
+            editorIds: editorIds
         )
         if let data = try? JSONEncoder.iso.encode(snap) {
             UserDefaults.standard.set(data, forKey: persistKey)
@@ -95,6 +107,8 @@ final class FamilyStore {
         var photos: [FamilyPhoto]
         var currentUserId: UUID?
         var circles: [ShareCircle]?
+        var createdBy: UUID?
+        var editorIds: [UUID]?
     }
 
     // MARK: - Members
@@ -102,9 +116,16 @@ final class FamilyStore {
     func addMember(_ m: FamilyMember) {
         members.append(m)
         if currentUserId == nil { currentUserId = m.id }
+        // The very first member added to a brand-new group becomes its creator.
+        let becameOwner = (createdBy == nil && members.count == 1)
+        if becameOwner { createdBy = m.id }
         save()
         let fid = familyId
-        Task { await cloud.push(member: m, familyId: fid) }
+        if becameOwner {
+            pushOwnerMember(m)
+        } else {
+            Task { await cloud.push(member: m, familyId: fid) }
+        }
     }
 
     func updateMember(_ m: FamilyMember) {
@@ -112,7 +133,11 @@ final class FamilyStore {
         members[i] = m
         save()
         let fid = familyId
-        Task { await cloud.push(member: m, familyId: fid) }
+        if createdBy == m.id {
+            pushOwnerMember(m)
+        } else {
+            Task { await cloud.push(member: m, familyId: fid) }
+        }
     }
 
     func deleteMember(_ id: UUID) {
@@ -123,6 +148,8 @@ final class FamilyStore {
         for i in circles.indices {
             circles[i].memberIds.removeAll { $0 == id }
         }
+        editorIds.removeAll { $0 == id }
+        if createdBy == id { createdBy = members.first?.id }
         save()
         Task { await cloud.deleteMember(id) }
     }
@@ -130,6 +157,49 @@ final class FamilyStore {
     func member(_ id: UUID?) -> FamilyMember? {
         guard let id else { return nil }
         return members.first { $0.id == id }
+    }
+
+    // MARK: - Permissions
+
+    /// Whether `userId` is allowed to add/edit/delete content in this group.
+    /// Legacy/unowned groups (`createdBy == nil`) grant edit access to everyone
+    /// for backwards compatibility.
+    func canEdit(_ userId: UUID?) -> Bool {
+        guard let owner = createdBy else { return true }
+        guard let uid = userId else { return false }
+        if uid == owner { return true }
+        return editorIds.contains(uid)
+    }
+
+    /// Convenience for the local user.
+    var canEditByCurrentUser: Bool { canEdit(currentUserId) }
+
+    /// True when the local user is the creator of this group.
+    var isOwnerCurrentUser: Bool {
+        guard let owner = createdBy, let uid = currentUserId else { return false }
+        return owner == uid
+    }
+
+    func setEditor(_ id: UUID, allowed: Bool) {
+        if allowed {
+            if !editorIds.contains(id) { editorIds.append(id) }
+        } else {
+            editorIds.removeAll { $0 == id }
+        }
+        save()
+        // The creator's Member record carries the group's `editorIds` and a
+        // `groupCreator` flag, so other devices learn about permission changes
+        // when they next sync members. Re-push the owner's member to update it.
+        if let owner = createdBy, let m = member(owner) {
+            pushOwnerMember(m)
+        }
+    }
+
+    /// Push a member who is the group creator, embedding permission metadata.
+    private func pushOwnerMember(_ m: FamilyMember) {
+        let fid = familyId
+        let editors = editorIds
+        Task { await cloud.pushOwner(member: m, familyId: fid, editorIds: editors) }
     }
 
     // MARK: - Circles (named subsets of members)
@@ -191,12 +261,13 @@ final class FamilyStore {
                                                        knownIDs: Set(messages.map(\.id)))
         async let updatedEvents = cloud.fetchEvents(familyId: familyId)
         async let updatedTodos = cloud.fetchTodos(familyId: familyId)
-        async let updatedMembers = cloud.fetchMembers(familyId: familyId)
+        async let updatedMembers = cloud.fetchMembersWithMeta(familyId: familyId)
         async let newPhotos = cloud.fetchPhotos(familyId: familyId,
                                                 knownIDs: Set(photos.map(\.id)))
 
-        let (msg, evt, td, mem, ph) = await (newMessages, updatedEvents,
-                                              updatedTodos, updatedMembers, newPhotos)
+        let (msg, evt, td, memMeta, ph) = await (newMessages, updatedEvents,
+                                                  updatedTodos, updatedMembers, newPhotos)
+        let mem = memMeta.members
         cloudStatus = cloud.status
         var changed = false
 
@@ -222,6 +293,13 @@ final class FamilyStore {
             for m in mem { map[m.id] = m }
             members = Array(map.values).sorted { $0.fullName < $1.fullName }
             changed = true
+        }
+        // Adopt the group creator + editors from CloudKit when discovered.
+        if let creator = memMeta.creatorId {
+            if createdBy != creator { createdBy = creator; changed = true }
+            if let inc = memMeta.editorIds, inc != editorIds {
+                editorIds = inc; changed = true
+            }
         }
         if !ph.isEmpty {
             photos.insert(contentsOf: ph.sorted { $0.date > $1.date }, at: 0)
@@ -362,7 +440,9 @@ final class FamilyStore {
             events: events,
             todos: todos,
             familyName: familyName,
-            circles: circles
+            circles: circles,
+            createdBy: createdBy,
+            editorIds: editorIds.isEmpty ? nil : editorIds
         )
     }
 
@@ -396,6 +476,16 @@ final class FamilyStore {
             var circleMap: [UUID: ShareCircle] = Dictionary(uniqueKeysWithValues: circles.map { ($0.id, $0) })
             for c in inc { circleMap[c.id] = c }
             circles = Array(circleMap.values)
+        }
+
+        // Adopt creator/editors from the wire when we don't have one yet, or when
+        // the incoming wire was authored by the current creator (last-write-wins
+        // for the editors list).
+        if createdBy == nil, let inc = wire.createdBy {
+            createdBy = inc
+        }
+        if let inc = wire.editorIds {
+            editorIds = inc
         }
 
         if currentUserId == nil { currentUserId = members.first?.id }

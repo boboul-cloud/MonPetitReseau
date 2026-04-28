@@ -1,4 +1,4 @@
-const CACHE = 'mpr-v4';
+const CACHE = 'mpr-v5';
 const ASSETS = ['./', './index.html', './manifest.json', './pako.min.js', './icon.svg', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

@@ -26,7 +26,9 @@ struct SettingsView: View {
             Form {
                 Section("settings.section.family") {
                     TextField("field.familyName", text: $familyName)
+                        .disabled(!store.canEditByCurrentUser)
                         .onChange(of: familyName) { _, v in
+                            guard store.canEditByCurrentUser else { return }
                             store.familyName = v; store.save()
                         }
                     Picker("settings.you", selection: Binding(
@@ -36,6 +38,37 @@ struct SettingsView: View {
                         Text("picker.none").tag(UUID?.none)
                         ForEach(store.members) { m in
                             Text(m.fullName).tag(UUID?.some(m.id))
+                        }
+                    }
+                }
+
+                if store.isOwnerCurrentUser {
+                    Section("settings.section.permissions") {
+                        Text("settings.permissions.help")
+                            .font(.caption).foregroundStyle(.secondary)
+                        ForEach(store.members) { m in
+                            HStack {
+                                AvatarView(member: m, size: 32)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(m.fullName)
+                                    if store.createdBy == m.id {
+                                        Text("permissions.creator.badge")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                                Spacer()
+                                if store.createdBy == m.id {
+                                    Image(systemName: "crown.fill")
+                                        .foregroundStyle(.yellow)
+                                } else {
+                                    Toggle("", isOn: Binding(
+                                        get: { store.editorIds.contains(m.id) },
+                                        set: { store.setEditor(m.id, allowed: $0) }
+                                    ))
+                                    .labelsHidden()
+                                }
+                            }
                         }
                     }
                 }
@@ -53,6 +86,7 @@ struct SettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .disabled(!store.canEditByCurrentUser)
                 }
 
                 Section("settings.section.share") {

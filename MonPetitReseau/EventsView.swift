@@ -35,10 +35,15 @@ struct EventsView: View {
                         Text("events.empty").foregroundStyle(.secondary)
                     } else {
                         ForEach(store.upcomingEvents) { e in
-                            Button { editing = e } label: { eventRow(e) }
-                                .buttonStyle(.plain)
+                            if store.canEditByCurrentUser {
+                                Button { editing = e } label: { eventRow(e) }
+                                    .buttonStyle(.plain)
+                            } else {
+                                eventRow(e)
+                            }
                         }
                         .onDelete { idx in
+                            guard store.canEditByCurrentUser else { return }
                             let arr = store.upcomingEvents
                             for i in idx { store.deleteEvent(arr[i].id) }
                         }
@@ -47,10 +52,13 @@ struct EventsView: View {
             }
             .navigationTitle("tab.events")
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button { showAdd = true } label: { Image(systemName: "calendar.badge.plus") }
+                if store.canEditByCurrentUser {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button { showAdd = true } label: { Image(systemName: "calendar.badge.plus") }
+                    }
                 }
             }
+            .readOnlyBanner(if: !store.canEditByCurrentUser)
             .sheet(isPresented: $showAdd) { EventEditView(mode: .add) }
             .sheet(item: $editing) { e in EventEditView(mode: .edit(e)) }
         }

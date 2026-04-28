@@ -61,6 +61,166 @@
         }
       }
     },
+    "audience.circle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Circle"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cercle"
+          }
+        }
+      }
+    },
+    "audience.clear": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Effacer"
+          }
+        }
+      }
+    },
+    "audience.custom": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personnes choisies"
+          }
+        }
+      }
+    },
+    "audience.everyone": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Everyone"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tout le monde"
+          }
+        }
+      }
+    },
+    "audience.everyone.help": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All members of this group will see this item."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tous les membres de ce groupe verront cet élément."
+          }
+        }
+      }
+    },
+    "audience.label": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visible to"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Visible par"
+          }
+        }
+      }
+    },
+    "audience.noCircles.help": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You haven't created any circles yet. Use “Selected” instead."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous n'avez pas encore créé de cercles. Utilisez « Personnes choisies »."
+          }
+        }
+      }
+    },
+    "audience.pickCircle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick a circle"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir un cercle"
+          }
+        }
+      }
+    },
+    "audience.pickMembers": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pick members"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir les membres"
+          }
+        }
+      }
+    },
+    "audience.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audience"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Public"
+          }
+        }
+      }
+    },
     "badge.you": {
       "localizations": {
         "en": {
@@ -109,6 +269,22 @@
         }
       }
     },
+    "button.create": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créer"
+          }
+        }
+      }
+    },
     "button.delete": {
       "localizations": {
         "en": {
@@ -137,214 +313,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "OK"
-          }
-        }
-      }
-    },
-    "cloud.error.offline": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Offline — messages will sync when back online"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hors ligne — les messages se synchroniseront au retour du réseau"
-          }
-        }
-      }
-    },
-    "cloud.error.signin": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sign in to iCloud to sync messages between devices"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Connectez-vous à iCloud pour synchroniser les messages"
-          }
-        }
-      }
-    },
-    "cloud.status.synced": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Synced via iCloud"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Synchronisé via iCloud"
-          }
-        }
-      }
-    },
-    "notif.event.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Family calendar"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Agenda familial"
-          }
-        }
-      }
-    },
-    "notif.event.one": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ added: %2$@"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ a ajouté : %2$@"
-          }
-        }
-      }
-    },
-    "notif.event.many": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d new events"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d nouveaux événements"
-          }
-        }
-      }
-    },
-    "notif.todo.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Family tasks"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tâches familiales"
-          }
-        }
-      }
-    },
-    "notif.todo.one": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ added a task: %2$@"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ a ajouté une tâche : %2$@"
-          }
-        }
-      }
-    },
-    "notif.todo.many": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d new tasks"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d nouvelles tâches"
-          }
-        }
-      }
-    },
-    "notif.photo.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New photo"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle photo"
-          }
-        }
-      }
-    },
-    "notif.photo.generic": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New photo shared"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle photo partagée"
-          }
-        }
-      }
-    },
-    "notif.photo.one": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ shared a photo"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ a partagé une photo"
-          }
-        }
-      }
-    },
-    "notif.photo.many": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d new photos"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%d nouvelles photos"
           }
         }
       }
@@ -393,6 +361,150 @@
           "stringUnit": {
             "state": "translated",
             "value": "Enregistrer"
+          }
+        }
+      }
+    },
+    "circles.add.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New circle"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau cercle"
+          }
+        }
+      }
+    },
+    "circles.edit.members": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Members"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Membres"
+          }
+        }
+      }
+    },
+    "circles.edit.name": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom"
+          }
+        }
+      }
+    },
+    "circles.edit.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit circle"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifier le cercle"
+          }
+        }
+      }
+    },
+    "circles.empty.subtitle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap + to create your first circle."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Touchez + pour créer votre premier cercle."
+          }
+        }
+      }
+    },
+    "circles.empty.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No circles yet"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun cercle"
+          }
+        }
+      }
+    },
+    "cloud.error.offline": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Offline — messages will sync when back online"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hors ligne — les messages se synchroniseront au retour du réseau"
+          }
+        }
+      }
+    },
+    "cloud.error.signin": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to iCloud to sync messages between devices"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connectez-vous à iCloud pour synchroniser les messages"
+          }
+        }
+      }
+    },
+    "cloud.status.synced": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synced via iCloud"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synchronisé via iCloud"
           }
         }
       }
@@ -765,6 +877,22 @@
         }
       }
     },
+    "field.name": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom"
+          }
+        }
+      }
+    },
     "field.partner": {
       "localizations": {
         "en": {
@@ -825,6 +953,134 @@
           "stringUnit": {
             "state": "translated",
             "value": "Titre"
+          }
+        }
+      }
+    },
+    "groups.join.help": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste a magic link from the group you want to join."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Collez le lien magique du groupe à rejoindre."
+          }
+        }
+      }
+    },
+    "groups.join.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join a group"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rejoindre un groupe"
+          }
+        }
+      }
+    },
+    "groups.menu.join": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join via link"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rejoindre via un lien"
+          }
+        }
+      }
+    },
+    "groups.menu.new": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New group"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau groupe"
+          }
+        }
+      }
+    },
+    "groups.menu.section": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your groups"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vos groupes"
+          }
+        }
+      }
+    },
+    "groups.new.section": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Group name"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom du groupe"
+          }
+        }
+      }
+    },
+    "groups.new.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New group"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau groupe"
+          }
+        }
+      }
+    },
+    "groups.new.you.section": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You in this group"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vous dans ce groupe"
           }
         }
       }
@@ -1373,6 +1629,166 @@
         }
       }
     },
+    "notif.event.many": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d new events"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d nouveaux événements"
+          }
+        }
+      }
+    },
+    "notif.event.one": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ added: %2$@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ a ajouté : %2$@"
+          }
+        }
+      }
+    },
+    "notif.event.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Family calendar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agenda familial"
+          }
+        }
+      }
+    },
+    "notif.photo.generic": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New photo shared"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouvelle photo partagée"
+          }
+        }
+      }
+    },
+    "notif.photo.many": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d new photos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d nouvelles photos"
+          }
+        }
+      }
+    },
+    "notif.photo.one": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ shared a photo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ a partagé une photo"
+          }
+        }
+      }
+    },
+    "notif.photo.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New photo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouvelle photo"
+          }
+        }
+      }
+    },
+    "notif.todo.many": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d new tasks"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d nouvelles tâches"
+          }
+        }
+      }
+    },
+    "notif.todo.one": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ added a task: %2$@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ a ajouté une tâche : %2$@"
+          }
+        }
+      }
+    },
+    "notif.todo.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Family tasks"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tâches familiales"
+          }
+        }
+      }
+    },
     "onboarding.create.button": {
       "localizations": {
         "en": {
@@ -1545,6 +1961,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "Bienvenue dans MonPetitRéseau"
+          }
+        }
+      }
+    },
+    "photos.add.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New photo"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouvelle photo"
           }
         }
       }
@@ -1837,6 +2269,22 @@
         }
       }
     },
+    "settings.about.groups": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Groups"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Groupes"
+          }
+        }
+      }
+    },
     "settings.about.members": {
       "localizations": {
         "en": {
@@ -1881,6 +2329,118 @@
           "stringUnit": {
             "state": "translated",
             "value": "Photos"
+          }
+        }
+      }
+    },
+    "settings.circles.help": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create named subsets of members to quickly share with the same group of people."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Créez des sous-groupes nommés pour partager rapidement avec les mêmes personnes."
+          }
+        }
+      }
+    },
+    "settings.circles.manage": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage circles"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gérer les cercles"
+          }
+        }
+      }
+    },
+    "settings.circles.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share circles"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cercles de partage"
+          }
+        }
+      }
+    },
+    "settings.deleteGroup": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this group"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer ce groupe"
+          }
+        }
+      }
+    },
+    "settings.deleteGroup.confirm.button": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer"
+          }
+        }
+      }
+    },
+    "settings.deleteGroup.confirm.message": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local data for this group will be removed. Other members keep their copy."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les données locales de ce groupe seront supprimées. Les autres membres gardent leur copie."
+          }
+        }
+      }
+    },
+    "settings.deleteGroup.confirm.title": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete this group?"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Supprimer ce groupe ?"
           }
         }
       }
@@ -1998,6 +2558,7 @@
       }
     },
     "settings.reset": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -2025,6 +2586,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "À propos"
+          }
+        }
+      }
+    },
+    "settings.section.circles": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share circles"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cercles de partage"
           }
         }
       }
@@ -2093,70 +2670,6 @@
         }
       }
     },
-    "share.default.familyName": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "my family"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ma famille"
-          }
-        }
-      }
-    },
-    "share.message.intro": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Join %@ on MonPetitReseau!"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rejoins %@ sur MonPetitReseau !"
-          }
-        }
-      }
-    },
-    "share.message.app": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📱 Open in the app:"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "📱 Ouvrir dans l'app :"
-          }
-        }
-      }
-    },
-    "share.message.web": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🌐 Without the app:"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "🌐 Sans l'app :"
-          }
-        }
-      }
-    },
     "settings.share.help": {
       "localizations": {
         "en": {
@@ -2185,6 +2698,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "Je suis"
+          }
+        }
+      }
+    },
+    "share.default.familyName": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "my family"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ma famille"
+          }
+        }
+      }
+    },
+    "share.message.app": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📱 Open in the app:"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "📱 Ouvrir dans l'app :"
+          }
+        }
+      }
+    },
+    "share.message.intro": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Join %@ on MonPetitReseau!"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rejoins %@ sur MonPetitReseau !"
+          }
+        }
+      }
+    },
+    "share.message.web": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌐 Without the app:"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "🌐 Sans l'app :"
           }
         }
       }
@@ -2333,578 +2910,121 @@
         }
       }
     },
-    "groups.menu.section": {
+    "banner.readonly": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Your groups"
+            "value": "Read-only — you can't edit this group"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vos groupes"
+            "value": "Lecture seule — vous ne pouvez pas modifier ce groupe"
           }
         }
       }
     },
-    "groups.menu.new": {
+    "settings.section.permissions": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "New group"
+            "value": "PERMISSIONS"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nouveau groupe"
+            "value": "PERMISSIONS"
           }
         }
       }
     },
-    "groups.menu.join": {
+    "settings.permissions.help": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Join via link"
+            "value": "You are the creator of this group. Toggle on to let a member add or edit content."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rejoindre via un lien"
+            "value": "Vous êtes le créateur de ce groupe. Activez le bouton pour autoriser un membre à ajouter ou modifier du contenu."
           }
         }
       }
     },
-    "groups.new.title": {
+    "permissions.creator.badge": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "New group"
+            "value": "Group creator"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nouveau groupe"
+            "value": "Créateur du groupe"
           }
         }
       }
     },
-    "groups.new.section": {
+    "avatar.choosePhoto": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Group name"
+            "value": "Choose a photo"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nom du groupe"
+            "value": "Choisir une photo"
           }
         }
       }
     },
-    "groups.new.you.section": {
+    "avatar.changePhoto": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "You in this group"
+            "value": "Change the photo"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Vous dans ce groupe"
+            "value": "Changer la photo"
           }
         }
       }
     },
-    "groups.join.title": {
+    "avatar.removePhoto": {
+      "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Join a group"
+            "value": "Remove the photo"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Rejoindre un groupe"
-          }
-        }
-      }
-    },
-    "groups.join.help": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Paste a magic link from the group you want to join."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Collez le lien magique du groupe à rejoindre."
-          }
-        }
-      }
-    },
-    "button.create": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Créer"
-          }
-        }
-      }
-    },
-    "settings.about.groups": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Groups"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Groupes"
-          }
-        }
-      }
-    },
-    "settings.deleteGroup": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete this group"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer ce groupe"
-          }
-        }
-      }
-    },
-    "settings.deleteGroup.confirm.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete this group?"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer ce groupe ?"
-          }
-        }
-      }
-    },
-    "settings.deleteGroup.confirm.message": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Local data for this group will be removed. Other members keep their copy."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Les données locales de ce groupe seront supprimées. Les autres membres gardent leur copie."
-          }
-        }
-      }
-    },
-    "settings.deleteGroup.confirm.button": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Supprimer"
-          }
-        }
-      }
-    },
-    "settings.section.circles": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share circles"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cercles de partage"
-          }
-        }
-      }
-    },
-    "settings.circles.help": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create named subsets of members to quickly share with the same group of people."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Créez des sous-groupes nommés pour partager rapidement avec les mêmes personnes."
-          }
-        }
-      }
-    },
-    "settings.circles.manage": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Manage circles"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gérer les cercles"
-          }
-        }
-      }
-    },
-    "settings.circles.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share circles"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cercles de partage"
-          }
-        }
-      }
-    },
-    "circles.empty.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No circles yet"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aucun cercle"
-          }
-        }
-      }
-    },
-    "circles.empty.subtitle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap + to create your first circle."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Touchez + pour créer votre premier cercle."
-          }
-        }
-      }
-    },
-    "circles.add.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New circle"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouveau cercle"
-          }
-        }
-      }
-    },
-    "circles.edit.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit circle"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Modifier le cercle"
-          }
-        }
-      }
-    },
-    "circles.edit.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nom"
-          }
-        }
-      }
-    },
-    "circles.edit.members": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Members"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Membres"
-          }
-        }
-      }
-    },
-    "field.name": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nom"
-          }
-        }
-      }
-    },
-    "audience.label": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visible to"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Visible par"
-          }
-        }
-      }
-    },
-    "audience.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Audience"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Public"
-          }
-        }
-      }
-    },
-    "audience.everyone": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Everyone"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tout le monde"
-          }
-        }
-      }
-    },
-    "audience.everyone.help": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All members of this group will see this item."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tous les membres de ce groupe verront cet élément."
-          }
-        }
-      }
-    },
-    "audience.circle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Circle"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cercle"
-          }
-        }
-      }
-    },
-    "audience.custom": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Selected"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Personnes choisies"
-          }
-        }
-      }
-    },
-    "audience.pickCircle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pick a circle"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choisir un cercle"
-          }
-        }
-      }
-    },
-    "audience.pickMembers": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pick members"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choisir les membres"
-          }
-        }
-      }
-    },
-    "audience.noCircles.help": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You haven't created any circles yet. Use “Selected” instead."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vous n'avez pas encore créé de cercles. Utilisez « Personnes choisies »."
-          }
-        }
-      }
-    },
-    "audience.clear": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Clear"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Effacer"
-          }
-        }
-      }
-    },
-    "photos.add.title": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New photo"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nouvelle photo"
+            "value": "Retirer la photo"
           }
         }
       }

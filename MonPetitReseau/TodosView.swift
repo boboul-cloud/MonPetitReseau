@@ -21,6 +21,7 @@ struct TodosView: View {
                     } else {
                         ForEach(pending) { t in row(t) }
                             .onDelete { idx in
+                                guard store.canEditByCurrentUser else { return }
                                 for i in idx { store.deleteTodo(pending[i].id) }
                             }
                     }
@@ -29,6 +30,7 @@ struct TodosView: View {
                     Section("todos.section.done") {
                         ForEach(done) { t in row(t) }
                             .onDelete { idx in
+                                guard store.canEditByCurrentUser else { return }
                                 for i in idx { store.deleteTodo(done[i].id) }
                             }
                     }
@@ -36,10 +38,13 @@ struct TodosView: View {
             }
             .navigationTitle("tab.todos")
             .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button { showAdd = true } label: { Image(systemName: "plus") }
+                if store.canEditByCurrentUser {
+                    ToolbarItem(placement: .primaryAction) {
+                        Button { showAdd = true } label: { Image(systemName: "plus") }
+                    }
                 }
             }
+            .readOnlyBanner(if: !store.canEditByCurrentUser)
             .sheet(isPresented: $showAdd) { TodoAddView() }
         }
     }
@@ -53,6 +58,7 @@ struct TodosView: View {
                     .foregroundStyle(t.isDone ? Color.accentColor : .secondary)
             }
             .buttonStyle(.plain)
+            .disabled(!store.canEditByCurrentUser)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(t.title)

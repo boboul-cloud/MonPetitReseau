@@ -27,9 +27,11 @@ struct MessagesView: View {
                                               author: store.member(msg.authorId))
                                 .id(msg.id)
                                 .contextMenu {
-                                    Button(role: .destructive) {
-                                        store.deleteMessage(msg.id)
-                                    } label: { Label("button.delete", systemImage: "trash") }
+                                    if store.canEditByCurrentUser {
+                                        Button(role: .destructive) {
+                                            store.deleteMessage(msg.id)
+                                        } label: { Label("button.delete", systemImage: "trash") }
+                                    }
                                 }
                             }
                         }
@@ -51,6 +53,7 @@ struct MessagesView: View {
 
                 Divider()
 
+                if store.canEditByCurrentUser {
                 VStack(spacing: 6) {
                     if draftAudience != nil {
                         HStack {
@@ -94,6 +97,9 @@ struct MessagesView: View {
                     .padding(.horizontal).padding(.bottom)
                 }
                 .padding(.top, 6)
+                } else {
+                    ReadOnlyBanner()
+                }
             }
             .navigationTitle("tab.messages")
             .navigationBarTitleDisplayMode(.inline)

@@ -21,6 +21,8 @@ struct FamilyMember: Identifiable, Codable, Hashable {
     var motherId: UUID?
     var fatherId: UUID?
     var partnerId: UUID?
+    /// Small portrait (JPEG, ~96px). Optional ; falls back to emoji then initials.
+    var avatarData: Data? = nil
 
     var fullName: String {
         let trimmed = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
@@ -115,4 +117,6 @@ struct FamilyWire: Codable {
     var todos: [FamilyTodo]
     var familyName: String
     var circles: [ShareCircle]?   // v3 — named share circles
+    var createdBy: UUID?          // v3 — group creator (member id)
+    var editorIds: [UUID]?        // v3 — members the creator granted edit access to
 }

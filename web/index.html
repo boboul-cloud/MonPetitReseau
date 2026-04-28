@@ -262,6 +262,9 @@ const fmtRelative = ts => {
 };
 function avatarHTML(member, sm=false) {
   if (!member) return `<div class="avatar ${sm?'sm':''}">?</div>`;
+  if (member.avatarData) {
+    return `<div class="avatar ${sm?'sm':''}" style="padding:0;background:transparent"><img src="data:image/jpeg;base64,${member.avatarData}" style="width:100%;height:100%;border-radius:50%;object-fit:cover" alt=""></div>`;
+  }
   return `<div class="avatar ${sm?'sm':''}">${member.emoji || (member.firstName[0]||'?')}</div>`;
 }
 
@@ -313,7 +316,7 @@ function renderMembers() {
       <div class="row">
         ${avatarHTML(m)}
         <div style="flex:1">
-          <div class="name">${escape(m.firstName)} ${escape(m.lastName)} ${m.id===meId?'<span class="badge">MOI</span>':''}</div>
+          <div class="name">${escape(m.firstName)} ${escape(m.lastName)} ${m.id===meId?'<span class="badge">MOI</span>':''} ${wire.createdBy===m.id?'<span class="badge" style="background:#fbbf24;color:#000">Créateur</span>':''}</div>
           ${m.role ? `<div class="muted">${escape(m.role)}</div>` : ''}
           ${m.city ? `<div class="muted">📍 ${escape(m.city)}</div>` : ''}
           ${m.phone ? `<div class="muted"><a href="tel:${m.phone}" style="color:var(--accent2)">📞 ${escape(m.phone)}</a></div>` : ''}
