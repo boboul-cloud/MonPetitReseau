@@ -61,6 +61,8 @@ struct MonPetitReseauApp: App {
                 }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active {
+                        // Clear the app-icon badge whenever the user opens the app.
+                        Task { try? await UNUserNotificationCenter.current().setBadgeCount(0) }
                         Task { await appStore.syncAll(notifyUser: false) }
                     }
                 }
