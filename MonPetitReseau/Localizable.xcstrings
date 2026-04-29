@@ -2651,13 +2651,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You are the creator of this group. Toggle on to let a member add or edit content."
+            "value" : "You are the creator of this group. Toggle on to let a member add, edit or remove people in the directory."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vous êtes le créateur de ce groupe. Activez le bouton pour autoriser un membre à ajouter ou modifier du contenu."
+            "value" : "Vous êtes le créateur de ce groupe. Activez le bouton pour autoriser un membre à ajouter, modifier ou supprimer des personnes dans l’annuaire."
           }
         }
       }

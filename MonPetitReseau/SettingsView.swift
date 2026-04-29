@@ -86,7 +86,6 @@ struct SettingsView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    .disabled(!store.canEditByCurrentUser)
                 }
 
                 Section("settings.section.share") {

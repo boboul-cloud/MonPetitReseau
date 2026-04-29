@@ -53,15 +53,12 @@ struct PhotosView: View {
             }
             .navigationTitle("tab.photos")
             .toolbar {
-                if store.canEditByCurrentUser {
-                    ToolbarItem(placement: .primaryAction) {
-                        PhotosPicker(selection: $pickerItem, matching: .images) {
-                            Image(systemName: "plus")
-                        }
+                ToolbarItem(placement: .primaryAction) {
+                    PhotosPicker(selection: $pickerItem, matching: .images) {
+                        Image(systemName: "plus")
                     }
                 }
             }
-            .readOnlyBanner(if: !store.canEditByCurrentUser)
             .onChange(of: pickerItem) { _, item in
                 guard let item else { return }
                 Task {
@@ -180,12 +177,10 @@ struct PhotoDetailView: View {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("button.close") { dismiss() }
                 }
-                if store.canEditByCurrentUser {
-                    ToolbarItem(placement: .destructiveAction) {
-                        Button(role: .destructive) {
-                            store.deletePhoto(photo.id); dismiss()
-                        } label: { Image(systemName: "trash") }
-                    }
+                ToolbarItem(placement: .destructiveAction) {
+                    Button(role: .destructive) {
+                        store.deletePhoto(photo.id); dismiss()
+                    } label: { Image(systemName: "trash") }
                 }
             }
         }
