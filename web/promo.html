@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7c3aed">
+<title>MonPetitRéseau — Le réseau privé de votre famille</title>
+<meta name="description" content="MonPetitRéseau — un petit réseau social privé pour votre famille. Sans serveur, sans compte, sans pistage. iPhone + iPad.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #0f0f17;
+    --card: #1c1c2a;
+    --txt: #f5f5fa;
+    --muted: #9a9ab8;
+    --accent: #a855f7;
+    --accent2: #ec4899;
+    --me: #6366f1;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: linear-gradient(180deg, #1a1030 0%, #0f0f17 100%);
+    color: var(--txt);
+    min-height: 100vh;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 32px 20px 80px; }
+  .lang {
+    display: flex; gap: 6px; justify-content: flex-end;
+    font-size: 0.85em; margin-bottom: 16px;
+  }
+  .lang a {
+    color: var(--muted); text-decoration: none;
+    padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--card);
+  }
+  .lang a.active { color: var(--txt); background: var(--card); }
+  header.hero {
+    text-align: center; padding: 30px 0 40px;
+  }
+  .icon {
+    width: 120px; height: 120px; border-radius: 28px; margin: 0 auto 18px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.35);
+  }
+  h1 {
+    font-size: 2.4em; margin: 0 0 8px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .tagline { color: var(--muted); font-size: 1.15em; max-width: 540px; margin: 0 auto; }
+  .badge {
+    display: inline-block; margin-top: 18px;
+    padding: 10px 20px; border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    color: white; font-weight: 600; text-decoration: none;
+  }
+  section {
+    background: var(--card); border-radius: 18px;
+    padding: 24px 22px; margin: 18px 0;
+  }
+  section h2 {
+    margin: 0 0 12px; font-size: 1.3em;
+    color: var(--accent);
+  }
+  ul { padding-left: 20px; }
+  li { margin: 6px 0; }
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: rgba(255,255,255,0.03); border-radius: 14px;
+    padding: 16px;
+  }
+  .card .emoji { font-size: 2em; }
+  .card h3 { margin: 8px 0 4px; font-size: 1em; color: var(--accent2); }
+  .card p { margin: 0; color: var(--muted); font-size: 0.9em; }
+  footer {
+    text-align: center; color: var(--muted); font-size: 0.85em;
+    padding: 30px 0 0;
+  }
+  footer a { color: var(--accent); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lang">
+    <a href="#fr" id="lang-fr" class="active" onclick="setLang('fr')">Français</a>
+    <a href="#en" id="lang-en" onclick="setLang('en')">English</a>
+  </div>
+
+  <header class="hero">
+    <div class="icon">👨‍👩‍👧‍👦</div>
+    <h1>MonPetitRéseau</h1>
+    <p class="tagline" data-lang="fr">Le réseau privé de votre famille.<br>Sans serveur, sans compte, sans pistage.</p>
+    <p class="tagline hidden" data-lang="en">Your family's private network.<br>No server. No account. No tracking.</p>
+  </header>
+
+  <!-- FR ----------------------------------------------------------------- -->
+  <div data-lang="fr">
+
+    <section>
+      <h2>Restez proches, simplement.</h2>
+      <p>MonPetitRéseau est une petite app iPhone et iPad pour <strong>partager avec votre famille</strong> :
+        un annuaire, un mur pour discuter, des photos, un calendrier d'événements, des listes de tâches.</p>
+      <p>Tout reste sur vos appareils. Pour échanger avec vos proches, l'app génère un <strong>lien magique</strong>
+        que vous envoyez par SMS ou iMessage. Pas de compte à créer, pas de mot de passe.</p>
+    </section>
+
+    <section>
+      <h2>Les fonctions</h2>
+      <div class="grid">
+        <div class="card"><div class="emoji">👨‍👩‍👧</div><h3>Annuaire</h3><p>Tous vos proches, leurs anniversaires, leurs liens familiaux.</p></div>
+        <div class="card"><div class="emoji">💬</div><h3>Mur</h3><p>Une timeline commune où chacun écrit, comme un vrai petit réseau.</p></div>
+        <div class="card"><div class="emoji">📸</div><h3>Photos</h3><p>Galerie partagée des souvenirs, qui reste sur vos iPhones.</p></div>
+        <div class="card"><div class="emoji">📅</div><h3>Événements</h3><p>Déjeuners de famille, vacances, anniversaires automatiques.</p></div>
+        <div class="card"><div class="emoji">✅</div><h3>Tâches</h3><p>Courses, démarches : assignez-les à un proche.</p></div>
+        <div class="card"><div class="emoji">🔒</div><h3>Privé</h3><p>Aucun serveur tiers. Aucune donnée vendue. Jamais.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Comment ça marche</h2>
+      <ol>
+        <li>Vous créez votre famille et ajoutez vos proches.</li>
+        <li>Vous touchez « Partager ma famille » et envoyez le lien par SMS.</li>
+        <li>Vos proches l'ouvrent : leur app rejoint instantanément votre réseau.</li>
+        <li>Mur, photos, événements, tâches sont synchronisés via iCloud entre les iPhones.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Vie privée par conception</h2>
+      <ul>
+        <li><strong>Pas de serveur.</strong> Pas de compte. Pas de pistage.</li>
+        <li>Vos données vivent sur votre iPhone et dans le lien que vous décidez d'envoyer.</li>
+        <li>La synchronisation entre iPhones passe par <strong>votre propre iCloud</strong> (Apple).</li>
+        <li>Vous restez maître de qui voit quoi : seul le créateur du groupe peut gérer la liste des membres.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Compatibilité</h2>
+      <p>iPhone et iPad — iOS 17 et plus. Application universelle, optimisée Liquid Glass.</p>
+      <p>Synchronisation : nécessite un compte iCloud actif sur l'appareil.</p>
+    </section>
+
+    <footer>
+      <p>
+        <a href="privacy.html">Politique de confidentialité</a> ·
+        <a href="support.html">Support</a> ·
+        <a href="index.html">Web companion</a>
+      </p>
+      <p>© 2026 Robert Oulhen — Fait avec ❤️ pour les familles.</p>
+    </footer>
+  </div>
+
+  <!-- EN ----------------------------------------------------------------- -->
+  <div data-lang="en" class="hidden">
+
+    <section>
+      <h2>Stay close, simply.</h2>
+      <p>MonPetitRéseau is a small iPhone and iPad app to <strong>share with your family</strong>:
+        a directory, a wall to chat, photos, an event calendar, shared task lists.</p>
+      <p>Everything stays on your devices. To exchange with relatives, the app generates a <strong>magic link</strong>
+        you send by SMS or iMessage. No account, no password.</p>
+    </section>
+
+    <section>
+      <h2>Features</h2>
+      <div class="grid">
+        <div class="card"><div class="emoji">👨‍👩‍👧</div><h3>Directory</h3><p>All your relatives, their birthdays, their family ties.</p></div>
+        <div class="card"><div class="emoji">💬</div><h3>Wall</h3><p>A common timeline where everyone posts — like a real little network.</p></div>
+        <div class="card"><div class="emoji">📸</div><h3>Photos</h3><p>A shared memory gallery that stays on your iPhones.</p></div>
+        <div class="card"><div class="emoji">📅</div><h3>Events</h3><p>Family lunches, holidays, automatic birthdays.</p></div>
+        <div class="card"><div class="emoji">✅</div><h3>Tasks</h3><p>Errands, paperwork: assign them to a relative.</p></div>
+        <div class="card"><div class="emoji">🔒</div><h3>Private</h3><p>No third-party server. Your data is never sold. Ever.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <ol>
+        <li>Create your family and add your relatives.</li>
+        <li>Tap "Share my family" and send the link by SMS.</li>
+        <li>Your relatives open it: their app joins your network instantly.</li>
+        <li>Wall, photos, events and tasks sync across iPhones via iCloud.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Privacy by design</h2>
+      <ul>
+        <li><strong>No server.</strong> No account. No tracking.</li>
+        <li>Your data lives on your iPhone and in the link you choose to send.</li>
+        <li>Sync between iPhones uses <strong>your own iCloud</strong> (Apple).</li>
+        <li>You stay in control: only the group creator can manage the member list.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Compatibility</h2>
+      <p>iPhone and iPad — iOS 17 and above. Universal app, optimized for Liquid Glass.</p>
+      <p>Sync: requires an active iCloud account on the device.</p>
+    </section>
+
+    <footer>
+      <p>
+        <a href="privacy.html">Privacy Policy</a> ·
+        <a href="support.html">Support</a> ·
+        <a href="index.html">Web companion</a>
+      </p>
+      <p>© 2026 Robert Oulhen — Made with ❤️ for families.</p>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  function setLang(l) {
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('hidden', el.dataset.lang !== l);
+    });
+    document.getElementById('lang-fr').classList.toggle('active', l === 'fr');
+    document.getElementById('lang-en').classList.toggle('active', l === 'en');
+    document.documentElement.lang = l;
+  }
+  // pick browser language on first load
+  if (navigator.language && navigator.language.startsWith('en')) {
+    setLang('en');
+  }
+</script>
+</body>
+</html>

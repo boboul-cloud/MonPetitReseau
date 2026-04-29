@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#7c3aed">
+<title>MonPetitRéseau — Support</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f0f17; color: #f5f5fa;
+    line-height: 1.6;
+    margin: 0; padding: 30px 20px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { color: #a855f7; margin-top: 0; }
+  h2 { color: #ec4899; margin-top: 28px; }
+  a { color: #a855f7; }
+  details {
+    background: #1c1c2a; border-radius: 12px; padding: 14px 16px; margin: 10px 0;
+  }
+  details summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { color: #a855f7; }
+  .lang { display: flex; gap: 6px; justify-content: flex-end; font-size: 0.85em; margin-bottom: 18px; }
+  .lang a { color: #9a9ab8; text-decoration: none; padding: 4px 10px; border-radius: 999px; border: 1px solid #1c1c2a; }
+  .lang a.active { color: #f5f5fa; background: #1c1c2a; }
+  .hidden { display: none; }
+  .cta {
+    display: inline-block; margin-top: 8px;
+    padding: 12px 22px; border-radius: 999px;
+    background: linear-gradient(90deg, #a855f7, #ec4899);
+    color: white; font-weight: 600; text-decoration: none;
+  }
+  footer { margin-top: 40px; color: #9a9ab8; font-size: 0.85em; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="lang">
+    <a href="#fr" id="lang-fr" class="active" onclick="setLang('fr')">Français</a>
+    <a href="#en" id="lang-en" onclick="setLang('en')">English</a>
+  </div>
+
+  <!-- FR -->
+  <div data-lang="fr">
+    <h1>Support — MonPetitRéseau</h1>
+    <p>Une question, un souci, une suggestion ? Nous sommes une toute petite équipe (en fait : une seule personne)
+       et nous lisons chaque message.</p>
+
+    <p><a class="cta" href="mailto:bob.oulhen@gmail.com?subject=Support%20MonPetitR%C3%A9seau">✉️ Nous écrire</a></p>
+
+    <h2>Questions fréquentes</h2>
+
+    <details>
+      <summary>Comment partager ma famille avec un proche ?</summary>
+      <p>Allez dans Réglages → Partager ma famille. L'app génère un lien que vous pouvez envoyer
+         par SMS, iMessage ou Mail. Quand votre proche le touche sur son iPhone, l'app s'ouvre et
+         rejoint instantanément votre réseau. S'il n'a pas l'app installée, il peut consulter le contenu
+         dans son navigateur.</p>
+    </details>
+
+    <details>
+      <summary>Mon proche n'a pas encore reçu mes nouvelles publications, pourquoi ?</summary>
+      <p>La synchronisation utilise iCloud. Vérifiez que les deux appareils sont connectés à Internet
+         et que iCloud est actif (Réglages iOS → Apple ID → iCloud).
+         Sur l'onglet Messages, faites un « tirer pour rafraîchir » pour forcer un sync.</p>
+    </details>
+
+    <details>
+      <summary>Qui peut ajouter des personnes dans ma famille ?</summary>
+      <p>Par défaut, seul le créateur du groupe (la personne qui a créé la famille) peut gérer
+         l'annuaire. Le créateur peut autoriser d'autres membres dans Réglages → Permissions.
+         Tous les membres peuvent en revanche écrire sur le mur, publier des photos, ajouter des
+         événements et des tâches.</p>
+    </details>
+
+    <details>
+      <summary>Comment supprimer une famille ?</summary>
+      <p>Réglages → tout en bas → Supprimer ce groupe. Toutes les données locales associées sont
+         effacées immédiatement. Pour effacer aussi les données iCloud, allez dans Réglages iOS →
+         Apple ID → iCloud → Gérer le stockage → MonPetitRéseau.</p>
+    </details>
+
+    <details>
+      <summary>Les photos peuvent-elles passer par le lien de partage ?</summary>
+      <p>Non, les photos seraient trop lourdes pour un SMS. Les photos sont synchronisées via iCloud
+         entre les iPhones, ou peuvent être envoyées via AirDrop / iMessage classique pour
+         compléter.</p>
+    </details>
+
+    <details>
+      <summary>Je veux changer la personne qui me représente</summary>
+      <p>Réglages → Je suis → choisissez votre fiche. Sur les appareils qui ne sont pas l'appareil
+         d'origine de la famille, il n'est pas possible de se présenter comme étant le créateur
+         (ceci pour empêcher d'usurper ses droits).</p>
+    </details>
+
+    <details>
+      <summary>Mes données sont-elles privées ?</summary>
+      <p>Oui. Aucune donnée n'est envoyée à l'éditeur de l'app. La synchronisation entre vos
+         appareils passe par votre propre iCloud. Voir la
+         <a href="privacy.html">politique de confidentialité</a> pour les détails.</p>
+    </details>
+
+    <details>
+      <summary>L'app est-elle gratuite ? Y a-t-il des achats intégrés ?</summary>
+      <p>L'app est entièrement gratuite. Aucune publicité, aucun achat intégré, aucun abonnement.</p>
+    </details>
+
+    <h2>Compatibilité</h2>
+    <p>iPhone et iPad, iOS 17 et plus.</p>
+
+    <h2>Toujours bloqué ?</h2>
+    <p>Écrivez-nous à <a href="mailto:bob.oulhen@gmail.com">bob.oulhen@gmail.com</a> en précisant
+       le modèle d'iPhone, la version d'iOS et la description du souci.</p>
+
+    <footer>
+      <a href="promo.html">← Accueil</a> · <a href="privacy.html">Confidentialité</a>
+    </footer>
+  </div>
+
+  <!-- EN -->
+  <div data-lang="en" class="hidden">
+    <h1>Support — MonPetitRéseau</h1>
+    <p>A question, a problem, a suggestion? We're a tiny team (actually: one person) and we read
+       every message.</p>
+
+    <p><a class="cta" href="mailto:bob.oulhen@gmail.com?subject=MonPetitR%C3%A9seau%20Support">✉️ Email us</a></p>
+
+    <h2>Frequently asked questions</h2>
+
+    <details>
+      <summary>How do I share my family with a relative?</summary>
+      <p>Go to Settings → Share my family. The app generates a link you can send by SMS, iMessage
+         or Mail. When your relative taps it on their iPhone, the app opens and instantly joins
+         your network. If they haven't installed the app, they can view the content in their browser.</p>
+    </details>
+
+    <details>
+      <summary>My relative hasn't received my latest posts. Why?</summary>
+      <p>Sync uses iCloud. Make sure both devices are online and that iCloud is enabled (iOS Settings
+         → Apple ID → iCloud). On the Messages tab, pull-to-refresh to force a sync.</p>
+    </details>
+
+    <details>
+      <summary>Who can add people to my family?</summary>
+      <p>By default only the group creator (the person who created the family) can manage the
+         directory. The creator can grant permission to other members in Settings → Permissions.
+         All members can however post on the wall, publish photos, add events and tasks.</p>
+    </details>
+
+    <details>
+      <summary>How do I delete a family?</summary>
+      <p>Settings → bottom → Delete this group. All local data is erased immediately. To also erase
+         iCloud data, go to iOS Settings → Apple ID → iCloud → Manage Storage → MonPetitRéseau.</p>
+    </details>
+
+    <details>
+      <summary>Can photos travel through the share link?</summary>
+      <p>No, photos would be too heavy for an SMS. Photos sync via iCloud between iPhones, or you
+         can also send them by AirDrop / iMessage to complement.</p>
+    </details>
+
+    <details>
+      <summary>I want to change the person that represents me</summary>
+      <p>Settings → I am → pick your card. On devices that are not the family's origin device, you
+         cannot select yourself as the creator (this prevents impersonating their rights).</p>
+    </details>
+
+    <details>
+      <summary>Is my data private?</summary>
+      <p>Yes. No data is sent to the app's publisher. Sync between your devices uses your own iCloud.
+         See our <a href="privacy.html">privacy policy</a> for details.</p>
+    </details>
+
+    <details>
+      <summary>Is the app free? Any in-app purchases?</summary>
+      <p>The app is entirely free. No ads, no in-app purchases, no subscription.</p>
+    </details>
+
+    <h2>Compatibility</h2>
+    <p>iPhone and iPad, iOS 17 and above.</p>
+
+    <h2>Still stuck?</h2>
+    <p>Write to <a href="mailto:bob.oulhen@gmail.com">bob.oulhen@gmail.com</a> with your iPhone model,
+       iOS version and a description of the issue.</p>
+
+    <footer>
+      <a href="promo.html">← Home</a> · <a href="privacy.html">Privacy</a>
+    </footer>
+  </div>
+
+</div>
+
+<script>
+  function setLang(l) {
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.classList.toggle('hidden', el.dataset.lang !== l);
+    });
+    document.getElementById('lang-fr').classList.toggle('active', l === 'fr');
+    document.getElementById('lang-en').classList.toggle('active', l === 'en');
+    document.documentElement.lang = l;
+  }
+  if (navigator.language && navigator.language.startsWith('en')) setLang('en');
+</script>
+</body>
+</html>
