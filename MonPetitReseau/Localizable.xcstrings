@@ -113,6 +113,7 @@
       }
     },
     "about.link.source" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -149,13 +150,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No server, no account, no analytics. Sync between your devices uses your private iCloud. Sharing happens through magic links you choose to send via SMS or iMessage."
+            "value" : "No server of our own, no account, no analytics. Your data is stored on your device and syncs automatically between members of the same group through Apple's iCloud. To invite a new person, you send them a private link by SMS or iMessage — once joined, everything updates by itself."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pas de serveur, pas de compte, pas de tracking. La synchronisation entre vos appareils passe par votre iCloud privé. Le partage se fait via des liens magiques que vous envoyez par SMS ou iMessage."
+            "value" : "Pas de serveur, pas de compte, pas de tracking. Vos données restent sur votre appareil et se synchronisent automatiquement entre les membres du groupe via iCloud d'Apple. Pour inviter une nouvelle personne, vous lui envoyez un lien privé par SMS ou iMessage — une fois rejointe, tout se met à jour tout seul."
           }
         }
       }
