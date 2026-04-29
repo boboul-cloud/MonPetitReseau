@@ -18,7 +18,6 @@ struct AboutView: View {
     private let promoURL = URL(string: "https://boboul-cloud.github.io/MonPetitReseau/promo.html")!
     private let privacyURL = URL(string: "https://boboul-cloud.github.io/MonPetitReseau/privacy.html")!
     private let supportURL = URL(string: "https://boboul-cloud.github.io/MonPetitReseau/support.html")!
-    private let repoURL = URL(string: "https://github.com/boboul-cloud/MonPetitReseau")!
 
     var body: some View {
         NavigationStack {
@@ -79,9 +78,6 @@ struct AboutView: View {
                         Divider().padding(.leading, 56)
                         AboutLinkRow(icon: "lifepreserver", color: .orange,
                                      title: "about.link.support", url: supportURL)
-                        Divider().padding(.leading, 56)
-                        AboutLinkRow(icon: "chevron.left.forwardslash.chevron.right", color: .gray,
-                                     title: "about.link.source", url: repoURL)
                     }
                     .background(Color(.secondarySystemGroupedBackground))
                     .clipShape(RoundedRectangle(cornerRadius: 14))
