@@ -335,10 +335,19 @@ final class FamilyStore {
         // The origin device is the source of truth for these fields, so we
         // must NOT let a stale cloud read overwrite a local toggle change
         // that hasn't yet propagated to CloudKit.
-        if let creator = memMeta.creatorId, !isOwnerDevice {
-            if createdBy != creator { createdBy = creator; changed = true }
-            if let inc = memMeta.editorIds, inc != editorIds {
-                editorIds = inc; changed = true
+        if let creator = memMeta.creatorId {
+            // Self-correct migration mistakes: if CloudKit confirms the
+            // creator is somebody else than us, we are NOT the origin
+            // device, even if the legacy migration heuristic mistakenly
+            // set the flag to true on first launch.
+            if creator != currentUserId && isOwnerDevice {
+                setOwnerDevice(false)
+            }
+            if !isOwnerDevice {
+                if createdBy != creator { createdBy = creator; changed = true }
+                if let inc = memMeta.editorIds, inc != editorIds {
+                    editorIds = inc; changed = true
+                }
             }
         }
         if !ph.isEmpty {
