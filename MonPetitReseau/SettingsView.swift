@@ -13,6 +13,7 @@ struct SettingsView: View {
     @State private var importText = ""
     @State private var importResult: ImportResult?
     @State private var showHelp = false
+    @State private var showAbout = false
     @State private var showCircles = false
     @State private var showDeleteConfirm = false
     @State private var showShareSheet = false
@@ -142,6 +143,11 @@ struct SettingsView: View {
                     } label: {
                         Label("settings.help.button", systemImage: "questionmark.circle.fill")
                     }
+                    Button {
+                        showAbout = true
+                    } label: {
+                        Label("settings.about.button", systemImage: "info.circle.fill")
+                    }
                     LabeledContent("settings.about.app", value: "MonPetitReseau 1.0")
                     LabeledContent("settings.about.groups", value: "\(app.groups.count)")
                     LabeledContent("settings.about.members", value: "\(store.members.count)")
@@ -162,6 +168,7 @@ struct SettingsView: View {
             .onAppear { familyName = store.familyName }
             .onChange(of: store.familyId) { _, _ in familyName = store.familyName }
             .sheet(isPresented: $showHelp) { HelpView() }
+            .sheet(isPresented: $showAbout) { AboutView() }
             .sheet(isPresented: $showCircles) {
                 CirclesManagerView()
             }
