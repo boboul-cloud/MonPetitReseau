@@ -48,10 +48,9 @@ struct DirectoryView: View {
                             MemberRow(member: m, isCurrent: m.id == store.currentUserId)
                         }
                     }
-                    .onDelete { idx in
-                        guard store.canEditByCurrentUser else { return }
+                    .onDelete(perform: store.canEditByCurrentUser ? { idx in
                         for i in idx { store.deleteMember(filtered[i].id) }
-                    }
+                    } : nil)
                 }
             }
             .searchable(text: $query, prompt: Text("directory.search"))
