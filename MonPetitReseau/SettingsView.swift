@@ -33,11 +33,25 @@ struct SettingsView: View {
                         }
                     Picker("settings.you", selection: Binding(
                         get: { store.currentUserId },
-                        set: { store.currentUserId = $0; store.save() }
+                        set: { newValue in
+                            // Block impersonating the group creator from a
+                            // device that is not the origin one.
+                            if let newValue,
+                               newValue == store.createdBy,
+                               !store.isOwnerDevice {
+                                return
+                            }
+                            store.currentUserId = newValue; store.save()
+                        }
                     )) {
                         Text("picker.none").tag(UUID?.none)
                         ForEach(store.members) { m in
-                            Text(m.fullName).tag(UUID?.some(m.id))
+                            // Hide the creator entry on non-origin devices.
+                            if m.id == store.createdBy && !store.isOwnerDevice {
+                                EmptyView()
+                            } else {
+                                Text(m.fullName).tag(UUID?.some(m.id))
+                            }
                         }
                     }
                 }

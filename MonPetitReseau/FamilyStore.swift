@@ -118,7 +118,13 @@ final class FamilyStore {
         if currentUserId == nil { currentUserId = m.id }
         // The very first member added to a brand-new group becomes its creator.
         let becameOwner = (createdBy == nil && members.count == 1)
-        if becameOwner { createdBy = m.id }
+        if becameOwner {
+            createdBy = m.id
+            // Mark THIS device as the origin device for that group.
+            // Stored only locally (UserDefaults) and never shared via the link,
+            // so other devices cannot impersonate the creator.
+            UserDefaults.standard.set(true, forKey: ownerDeviceKey)
+        }
         save()
         let fid = familyId
         if becameOwner {
@@ -161,23 +167,54 @@ final class FamilyStore {
 
     // MARK: - Permissions
 
+    /// UserDefaults key used to remember that THIS device is the origin
+    /// device for the group (i.e. the one that created it).
+    /// This flag is never serialized in shares, so other devices cannot
+    /// claim ownership.
+    private var ownerDeviceKey: String {
+        "MonPetitReseau.ownerDevice.\(familyId.uuidString)"
+    }
+
+    /// True only on the device where the group was originally created.
+    /// Backwards compatibility: groups created before this flag existed have
+    /// no entry in UserDefaults. In that case, assume the device whose
+    /// `currentUserId` matches `createdBy` is the origin device, and persist
+    /// that assumption so it is stable across launches.
+    var isOwnerDevice: Bool {
+        if let v = UserDefaults.standard.object(forKey: ownerDeviceKey) as? Bool {
+            return v
+        }
+        let inferred = (currentUserId != nil && currentUserId == createdBy)
+        UserDefaults.standard.set(inferred, forKey: ownerDeviceKey)
+        return inferred
+    }
+
+    /// Mark / unmark this device as origin (used by manual recovery flows).
+    func setOwnerDevice(_ flag: Bool) {
+        UserDefaults.standard.set(flag, forKey: ownerDeviceKey)
+    }
+
     /// Whether `userId` is allowed to add/edit/delete content in this group.
     /// Legacy/unowned groups (`createdBy == nil`) grant edit access to everyone
     /// for backwards compatibility.
+    /// Only the origin device can act as the creator: another device that
+    /// imported the group cannot grant itself owner rights by selecting the
+    /// creator in the "I am…" picker.
     func canEdit(_ userId: UUID?) -> Bool {
         guard let owner = createdBy else { return true }
         guard let uid = userId else { return false }
-        if uid == owner { return true }
+        if uid == owner { return isOwnerDevice }
         return editorIds.contains(uid)
     }
 
     /// Convenience for the local user.
     var canEditByCurrentUser: Bool { canEdit(currentUserId) }
 
-    /// True when the local user is the creator of this group.
+    /// True when the local user is the creator of this group AND we are on
+    /// the original device. Used to gate the permissions UI.
     var isOwnerCurrentUser: Bool {
         guard let owner = createdBy, let uid = currentUserId else { return false }
-        return owner == uid
+        return owner == uid && isOwnerDevice
     }
 
     func setEditor(_ id: UUID, allowed: Bool) {

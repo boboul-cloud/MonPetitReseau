@@ -171,7 +171,8 @@ struct MemberDetailView: View {
                     }
                     .buttonStyle(.bordered)
                     .padding(.horizontal)
-                    .disabled(store.currentUserId == m.id)
+                    .disabled(store.currentUserId == m.id
+                              || (store.createdBy == m.id && !store.isOwnerDevice))
                 }
             }
             .padding(.bottom, 40)
