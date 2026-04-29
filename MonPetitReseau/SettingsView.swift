@@ -103,26 +103,28 @@ struct SettingsView: View {
                     }
                 }
 
-                Section("settings.section.share") {
-                    Text("settings.share.help")
-                        .font(.caption).foregroundStyle(.secondary)
-                    let message = store.shareMessage()
-                    let appURL = store.shareAppURL()
-                    if !message.isEmpty {
-                        Button {
-                            showShareSheet = true
-                        } label: {
-                            Label("settings.share.button", systemImage: "square.and.arrow.up")
+                if store.canEditByCurrentUser {
+                    Section("settings.section.share") {
+                        Text("settings.share.help")
+                            .font(.caption).foregroundStyle(.secondary)
+                        let message = store.shareMessage()
+                        let appURL = store.shareAppURL()
+                        if !message.isEmpty {
+                            Button {
+                                showShareSheet = true
+                            } label: {
+                                Label("settings.share.button", systemImage: "square.and.arrow.up")
+                            }
+                            .sheet(isPresented: $showShareSheet) {
+                                ActivityView(activityItems: [message])
+                            }
                         }
-                        .sheet(isPresented: $showShareSheet) {
-                            ActivityView(activityItems: [message])
+                        if let appURL {
+                            Text(appURL.absoluteString)
+                                .font(.caption2).foregroundStyle(.secondary)
+                                .lineLimit(2).truncationMode(.middle)
+                                .textSelection(.enabled)
                         }
-                    }
-                    if let appURL {
-                        Text(appURL.absoluteString)
-                            .font(.caption2).foregroundStyle(.secondary)
-                            .lineLimit(2).truncationMode(.middle)
-                            .textSelection(.enabled)
                     }
                 }
 
