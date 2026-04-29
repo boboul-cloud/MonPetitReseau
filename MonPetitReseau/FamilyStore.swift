@@ -332,7 +332,10 @@ final class FamilyStore {
             changed = true
         }
         // Adopt the group creator + editors from CloudKit when discovered.
-        if let creator = memMeta.creatorId {
+        // The origin device is the source of truth for these fields, so we
+        // must NOT let a stale cloud read overwrite a local toggle change
+        // that hasn't yet propagated to CloudKit.
+        if let creator = memMeta.creatorId, !isOwnerDevice {
             if createdBy != creator { createdBy = creator; changed = true }
             if let inc = memMeta.editorIds, inc != editorIds {
                 editorIds = inc; changed = true
