@@ -15,6 +15,7 @@ struct SettingsView: View {
     @State private var showHelp = false
     @State private var showCircles = false
     @State private var showDeleteConfirm = false
+    @State private var showShareSheet = false
 
     enum ImportResult: Identifiable {
         case ok, fail
@@ -108,11 +109,13 @@ struct SettingsView: View {
                     let message = store.shareMessage()
                     let appURL = store.shareAppURL()
                     if !message.isEmpty {
-                        ShareLink(item: message,
-                                  subject: Text(store.familyName.isEmpty
-                                                ? "MonPetitReseau"
-                                                : store.familyName)) {
+                        Button {
+                            showShareSheet = true
+                        } label: {
                             Label("settings.share.button", systemImage: "square.and.arrow.up")
+                        }
+                        .sheet(isPresented: $showShareSheet) {
+                            ActivityView(activityItems: [message])
                         }
                     }
                     if let appURL {
@@ -515,4 +518,21 @@ struct AudienceChooserSheet: View {
             }
         }
     }
+}
+
+// MARK: - Activity sheet (UIKit bridge for reliable iPad popover)
+
+/// Wrapper around `UIActivityViewController` so we control the sheet presentation
+/// ourselves. SwiftUI's `ShareLink` inside a Form sometimes opens half-collapsed
+/// on iPad ; presenting our own sheet works around that.
+private struct ActivityView: UIViewControllerRepresentable {
+    let activityItems: [Any]
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let vc = UIActivityViewController(activityItems: activityItems,
+                                          applicationActivities: nil)
+        return vc
+    }
+
+    func updateUIViewController(_ controller: UIActivityViewController, context: Context) {}
 }
