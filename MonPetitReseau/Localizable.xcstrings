@@ -1161,13 +1161,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Photos are not transmitted via the link (too heavy). Use AirDrop or iMessage for that.\n• When you change something, re-share the link so your relatives get the update.\n• Each relative can also re-share their version: incoming changes are merged with yours.\n• Tap a member then 'This is me' to identify yourself on a shared phone."
+            "value" : "• Photos are not transmitted via the link (too heavy). Use AirDrop or iMessage for that.\n• When you change something, re-share the link so your relatives get the update.\n• Each relative can also re-share their version: incoming changes are merged with yours.\n• Tap a member then 'This is me' to identify yourself on a shared phone.\n• Everyone can write on the wall, post photos, add events and tasks. Only the group creator (and the members they authorize in Settings) can add, edit or remove people in the directory."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "• Les photos ne passent pas par le lien (trop lourdes). Utilisez AirDrop ou iMessage pour ça.\n• Quand vous modifiez quelque chose, re-partagez le lien pour que vos proches reçoivent la mise à jour.\n• Chaque proche peut aussi re-partager sa version : les changements reçus sont fusionnés avec les vôtres.\n• Touchez un membre puis 'C'est moi' pour vous identifier sur un téléphone partagé."
+            "value" : "• Les photos ne passent pas par le lien (trop lourdes). Utilisez AirDrop ou iMessage pour ça.\n• Quand vous modifiez quelque chose, re-partagez le lien pour que vos proches reçoivent la mise à jour.\n• Chaque proche peut aussi re-partager sa version : les changements reçus sont fusionnés avec les vôtres.\n• Touchez un membre puis 'C'est moi' pour vous identifier sur un téléphone partagé.\n• Tout le monde peut écrire sur le mur, publier des photos, ajouter des événements et des tâches. Seul le créateur du groupe (et les membres qu'il autorise dans les Réglages) peut ajouter, modifier ou supprimer des personnes dans l'annuaire."
           }
         }
       }
