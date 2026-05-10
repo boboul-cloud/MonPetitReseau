@@ -92,7 +92,7 @@ struct SettingsView: View {
                 if let creatorId = store.createdBy,
                    let creator = store.member(creatorId),
                    !store.isOwnerCurrentUser {
-                    Section {
+                    Section("settings.section.reclaim") {
                         Text("settings.reclaim.help")
                             .font(.caption).foregroundStyle(.secondary)
                         HStack {
@@ -105,8 +105,6 @@ struct SettingsView: View {
                         } label: {
                             Label("settings.reclaim.button", systemImage: "crown.fill")
                         }
-                    } header: {
-                        Text("settings.section.reclaim")
                     }
                 }
 

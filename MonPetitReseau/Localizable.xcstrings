@@ -112,23 +112,6 @@
         }
       }
     },
-    "about.link.source" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Source code (GitHub)"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Code source (GitHub)"
-          }
-        }
-      }
-    },
     "about.link.support" : {
       "localizations" : {
         "en" : {
@@ -2967,23 +2950,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vous êtes le créateur de ce groupe. Activez le bouton pour autoriser un membre à ajouter, modifier ou supprimer des personnes dans l’annuaire."
-          }
-        }
-      }
-    },
-    "settings.reset" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reset everything"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tout réinitialiser"
           }
         }
       }
