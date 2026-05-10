@@ -194,6 +194,19 @@ final class FamilyStore {
         UserDefaults.standard.set(flag, forKey: ownerDeviceKey)
     }
 
+    /// Reclaim admin rights on this device when the origin flag was lost.
+    /// Sets this device as origin, switches the current user to the creator,
+    /// and re-pushes the creator's CloudKit record so other devices learn.
+    func claimOwnership() {
+        guard let creatorId = createdBy else { return }
+        setOwnerDevice(true)
+        currentUserId = creatorId
+        save()
+        if let m = member(creatorId) {
+            pushOwnerMember(m)
+        }
+    }
+
     /// Whether `userId` is allowed to add/edit/delete content in this group.
     /// Legacy/unowned groups (`createdBy == nil`) grant edit access to everyone
     /// for backwards compatibility.

@@ -2682,6 +2682,102 @@
         }
       }
     },
+    "settings.reclaim.button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I am this person – Recover admin"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C'est moi – Récupérer la gestion"
+          }
+        }
+      }
+    },
+    "settings.reclaim.confirm.button" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recover"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récupérer"
+          }
+        }
+      }
+    },
+    "settings.reclaim.confirm.message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This device will be recognised as the group origin. You will regain full admin rights."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cet appareil sera reconnu comme l'appareil d'origine du groupe. Vous retrouverez tous vos droits d'administration."
+          }
+        }
+      }
+    },
+    "settings.reclaim.confirm.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recover admin rights?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récupérer la gestion ?"
+          }
+        }
+      }
+    },
+    "settings.reclaim.help" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This group has a designated creator, but this device is not recognised as the origin device. If you created this group, tap below to recover your admin rights."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ce groupe a un créateur désigné, mais cet appareil n'est pas reconnu comme l'appareil d'origine. Si vous avez créé ce groupe, récupérez vos droits ci-dessous."
+          }
+        }
+      }
+    },
+    "settings.section.reclaim" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recover admin rights"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Récupérer la gestion"
+          }
+        }
+      }
+    },
     "settings.deleteGroup" : {
       "localizations" : {
         "en" : {

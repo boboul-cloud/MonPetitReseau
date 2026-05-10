@@ -17,6 +17,7 @@ struct SettingsView: View {
     @State private var showCircles = false
     @State private var showDeleteConfirm = false
     @State private var showShareSheet = false
+    @State private var showReclaimConfirm = false
 
     enum ImportResult: Identifiable {
         case ok, fail
@@ -55,6 +56,29 @@ struct SettingsView: View {
                                 Text(m.fullName).tag(UUID?.some(m.id))
                             }
                         }
+                    }
+                }
+
+                // Recovery section: visible when the group has a creator but this
+                // device is not recognised as the origin (flag was lost).
+                if let creatorId = store.createdBy,
+                   let creator = store.member(creatorId),
+                   !store.isOwnerCurrentUser {
+                    Section {
+                        Text("settings.reclaim.help")
+                            .font(.caption).foregroundStyle(.secondary)
+                        HStack {
+                            AvatarView(member: creator, size: 28)
+                            Text(creator.fullName)
+                                .font(.subheadline)
+                        }
+                        Button {
+                            showReclaimConfirm = true
+                        } label: {
+                            Label("settings.reclaim.button", systemImage: "crown.fill")
+                        }
+                    } header: {
+                        Text("settings.section.reclaim")
                     }
                 }
 
@@ -202,6 +226,16 @@ struct SettingsView: View {
                 Button("button.cancel", role: .cancel) { }
             } message: {
                 Text("settings.deleteGroup.confirm.message")
+            }
+            .confirmationDialog("settings.reclaim.confirm.title",
+                                isPresented: $showReclaimConfirm,
+                                titleVisibility: .visible) {
+                Button("settings.reclaim.confirm.button") {
+                    store.claimOwnership()
+                }
+                Button("button.cancel", role: .cancel) { }
+            } message: {
+                Text("settings.reclaim.confirm.message")
             }
         }
     }

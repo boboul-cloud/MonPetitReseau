@@ -177,6 +177,185 @@ Suggestion de scénarios :
 4. L'écran d'événements.
 5. L'écran de partage avec un QR / lien.
 
+## Réponse au rejet Guideline 2.1 — VERSION COURTE (à coller)
+
+Version compacte qui rentre dans la limite de caractères de la Resolution Center.
+
+```
+Hello, thank you for the review. Replies to the 6 points:
+
+1) SCREEN RECORDING: attached (MonPetitReseau-demo.mp4), captured on a
+physical iPhone. It shows: app launch, onboarding (family + first member),
+Directory (add member), Wall (post message), Photos (with iOS photo
+permission prompt), Events (add event), Tasks (add task), Settings →
+Share my family (link + QR), notifications permission prompt.
+
+2) PURPOSE: a private little social network for ONE family. Lets
+relatives share a directory, a wall, photos, events and to-dos without
+public social networks and without creating an account on a third-party
+server. Audience: families, especially with grandparents or distant
+relatives, who want a low-friction private space.
+
+3) HOW TO ACCESS: no demo account is needed — the app has NO login,
+because it has NO server backend. Steps:
+  a) Launch the app, fill family name + your name, tap Create.
+  b) Directory tab → "+" to add members.
+  c) Wall tab → "+" to post a message.
+  d) Photos tab → "+" to add a photo (iOS asks for photo permission).
+  e) Events tab → "+" to add an event.
+  f) Todos tab → "+" to add a task.
+  g) Settings → "Share my family" generates a link + QR (SMS-friendly).
+     Opening the link on another iPhone with the app joins the same
+     family. Opening it in a browser shows a read-only web companion.
+
+4) EXTERNAL SERVICES:
+  - Apple CloudKit, private database of the user's own iCloud account,
+    to sync family data between the user's devices and family members'
+    devices. No third-party server, no public CloudKit container.
+  - Apple Push Notification service (APNs) for optional new-message
+    notifications.
+  - GitHub Pages hosts only static pages (privacy / support / promo /
+    read-only web companion). No backend, no data collection.
+  - No analytics, no tracker, no ad SDK, no payment processor, no AI
+    service, no third-party authentication. Only Apple frameworks at
+    runtime.
+
+5) REGIONAL DIFFERENCES: none. Same features everywhere. Only the UI
+language adapts (full FR + EN localization, follows device language).
+
+6) REGULATED INDUSTRY: not applicable (no health, finance, gambling,
+crypto, government). No license required.
+
+App Privacy: "No data collected" — user content stays on the device
+and in the user's own iCloud private database.
+
+Thank you.
+```
+
+---
+
+## Réponse au rejet Guideline 2.1 — version longue (référence)
+
+Version détaillée originale, à garder en référence pour les Notes du champ App Review Information lors des prochaines soumissions.
+
+```
+Hello, thank you for the review. Please find below the requested information.
+
+1) SCREEN RECORDING
+A screen recording captured on a physical iPhone is attached to this reply
+(file: MonPetitReseau-demo.mp4). It starts with launching the app from the
+home screen and goes through the typical user flow:
+  - First launch: create the family and the first member card.
+  - Directory tab: add a couple of members and view birthdays.
+  - Wall tab: post a message.
+  - Photos tab: add a photo (the system permission prompt for the photo
+    library is shown and accepted).
+  - Events tab: create an event.
+  - Tasks tab: add a task.
+  - Settings → Share my family: generate the share link (SMS-friendly URL)
+    and show the QR code.
+  - Open the link on a second iPhone to demonstrate joining the family.
+  - Settings → notifications: the system permission prompt is shown.
+The recording shows no login screen because the app does not have any
+account system (see point 3).
+
+2) APP PURPOSE
+MonPetitRéseau is a private little social network for one family.
+Problem it solves: families (especially with grandparents, distant
+relatives or siblings) want to share news, photos, events and to-dos
+without using public social networks (Facebook, Instagram, WhatsApp groups)
+and without creating yet another account on a third-party server.
+Value provided: a single, ad-free, account-free, server-free space that
+lives on the family members' iPhones and syncs through their own iCloud.
+Target audience: families that want a private, low-friction way to stay
+in touch.
+
+3) HOW TO ACCESS AND REVIEW THE MAIN FEATURES
+No demo account or credentials are needed. The app has NO login system
+because it has NO server backend.
+
+Step-by-step:
+  a) Launch the app. On first launch you are asked for the family name
+     and your own first/last name. Fill them in and tap "Create".
+  b) The "Directory" tab opens. Tap "+" to add a few family members
+     (name, optional birthday, optional family tie). Each member is
+     stored locally and synced via the reviewer's iCloud account.
+  c) Open the "Wall" tab and tap "+" to post a short message.
+  d) Open the "Photos" tab and tap "+" to add a photo from the library
+     (iOS will ask for photo library permission — this is expected).
+  e) Open the "Events" tab and add an event (e.g. a lunch next Sunday).
+     Birthdays added in the directory automatically appear here.
+  f) Open the "Todos" tab and add a shared task.
+  g) Open "Settings" → "Share my family". The app generates a link
+     (https://boboul-cloud.github.io/MonPetitReseau/?data=...) and a QR
+     code. The link can be sent by SMS / iMessage. Opening the link on
+     another iPhone with MonPetitRéseau installed adds that device to
+     the same family. If the link is opened in a browser, a read-only
+     web companion is shown.
+  h) The creator of the family is the only member who can manage the
+     member list (add / remove other members). Other members get a
+     read-only banner on the directory.
+
+4) EXTERNAL SERVICES, TOOLS OR PLATFORMS USED
+  - Apple CloudKit (private database of the user's own iCloud account)
+    is used to sync the family data between the user's own iPhones and
+    between iPhones of family members who have joined via the share link.
+    No third-party server is involved. The app uses only the user's own
+    iCloud private database — there is no public CloudKit container,
+    no shared CloudKit zone managed by us.
+  - Apple Push Notification service (APNs) for the optional new-message
+    notifications, via the standard NotificationService extension.
+  - GitHub Pages hosts the static web companion / privacy / support /
+    promo pages (https://boboul-cloud.github.io/MonPetitReseau/). The
+    web companion is a single static HTML file that decodes the share
+    link client-side. It does not collect anything and does not call
+    any backend.
+  - No analytics SDK, no tracker, no advertising SDK, no payment
+    processor, no AI service, no third-party authentication, no data
+    broker. The app does not embed any third-party code at runtime
+    other than Apple's frameworks.
+
+5) REGIONAL DIFFERENCES
+The app behaves identically in all regions. The only regional
+adaptation is the user interface language: the app is fully localized
+in French and English and follows the device language. There is no
+geo-restricted feature, no geo-restricted content, and no feature that
+depends on the user's country, carrier or region.
+
+6) HIGHLY REGULATED INDUSTRY
+The app does not operate in a regulated industry (no health, no
+finance, no gambling, no government, no crypto, no medical advice).
+No special license or credential is required.
+
+Additional notes:
+  - The app does not collect any data on our side (App Privacy
+    questionnaire = "No data collected"). User content is stored
+    locally on the device and synced to the user's own iCloud private
+    database.
+  - Permission prompts: photo library (only when adding a photo),
+    notifications (only if the user enables wall notifications in
+    settings). Each Info.plist purpose string explains the use.
+
+Thank you for the additional review.
+```
+
+### Pense-bête pour l'enregistrement vidéo
+
+À filmer sur **iPhone physique** (pas le simulateur) avec l'enregistreur d'écran iOS :
+
+1. Écran d'accueil → tape sur l'icône MonPetitRéseau (montre bien le lancement).
+2. Onboarding : nom de famille + prénom/nom + Créer.
+3. Annuaire : ajoute 2 membres avec anniversaire.
+4. Mur : poste un message.
+5. Photos : ajoute une photo → **laisse bien apparaître la pop-up de permission Photos** et accepte.
+6. Événements : ajoute un événement.
+7. Tâches : ajoute une tâche.
+8. Réglages → Partager ma famille : montre le QR + le lien.
+9. (Si possible) Ouvre le lien sur un 2ᵉ iPhone et montre l'arrivée du nouveau membre.
+10. Réglages → active les notifications → **laisse apparaître la pop-up système** et accepte.
+
+Garde la vidéo entre **30 s et 2 min**, format portrait, son désactivé OK. Upload `.mp4` ou `.mov` en pièce jointe dans la réponse au Resolution Center.
+
 ## Checklist avant Submit
 
 - [ ] Build 1.0 archivé et uploadé via Xcode (Product → Archive)
