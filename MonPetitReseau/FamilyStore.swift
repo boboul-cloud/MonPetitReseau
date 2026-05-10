@@ -194,6 +194,59 @@ final class FamilyStore {
         UserDefaults.standard.set(flag, forKey: ownerDeviceKey)
     }
 
+    // MARK: - Invited-as hint
+
+    /// UserDefaults key that remembers which member this device was explicitly
+    /// invited as (via a personalised `for=<memberID>` URL).
+    /// Local-only — never shared in the wire.
+    private var invitedAsKey: String {
+        "MonPetitReseau.invitedAs.\(familyId.uuidString)"
+    }
+
+    /// The member id this device was invited as, if any.
+    /// Used to filter the "Je suis" picker to a single entry.
+    var invitedAsMemberId: UUID? {
+        get {
+            guard let s = UserDefaults.standard.string(forKey: invitedAsKey) else { return nil }
+            return UUID(uuidString: s)
+        }
+        set {
+            if let v = newValue {
+                UserDefaults.standard.set(v.uuidString, forKey: invitedAsKey)
+            } else {
+                UserDefaults.standard.removeObject(forKey: invitedAsKey)
+            }
+        }
+    }
+
+    /// Generates a personalised invite URL (and message) for a specific member.
+    func shareAppURL(for memberId: UUID) -> URL? {
+        guard let token = URLCodec.encode(makeWire()) else { return nil }
+        var s = "\(Self.appScheme)://import#d=\(token)&for=\(memberId.uuidString)"
+        if let me = currentUserId { s += "&me=\(me.uuidString)" }
+        return URL(string: s)
+    }
+
+    func shareMessage(for memberId: UUID) -> String {
+        guard let m = member(memberId) else { return shareMessage() }
+        let name = familyName.isEmpty
+            ? String(localized: "share.default.familyName")
+            : familyName
+        let intro = String(format: String(localized: "share.message.intro"), name)
+        var lines: [String] = [intro]
+        if let app = shareAppURL(for: memberId) {
+            lines.append("")
+            lines.append(String(format: String(localized: "share.message.for"), m.fullName))
+            lines.append(app.absoluteString)
+        }
+        if let web = shareURL() {
+            lines.append("")
+            lines.append(String(localized: "share.message.web"))
+            lines.append(web.absoluteString)
+        }
+        return lines.joined(separator: "\n")
+    }
+
     /// Reclaim admin rights on this device when the origin flag was lost.
     /// Sets this device as origin, switches the current user to the creator,
     /// and re-pushes the creator's CloudKit record so other devices learn.
@@ -837,11 +890,13 @@ final class AppStore {
         let raw = url.fragment ?? url.query ?? ""
         var token: String?
         var meId: UUID?
+        var forId: UUID?
         for part in raw.split(separator: "&") {
             let kv = part.split(separator: "=", maxSplits: 1).map(String.init)
             guard kv.count == 2 else { continue }
-            if kv[0] == "d" { token = kv[1] }
-            if kv[0] == "me" { meId = UUID(uuidString: kv[1]) }
+            if kv[0] == "d"   { token = kv[1] }
+            if kv[0] == "me"  { meId  = UUID(uuidString: kv[1]) }
+            if kv[0] == "for" { forId = UUID(uuidString: kv[1]) }
         }
         guard let t = token, let wire = URLCodec.decode(t) else { return false }
 
@@ -859,9 +914,15 @@ final class AppStore {
             }
         }
         target.merge(wire)
-        if let me = meId, target.members.contains(where: { $0.id == me }) {
+        // `for=` takes priority: it is the explicit intended identity.
+        let resolvedMe = forId ?? meId
+        if let me = resolvedMe, target.members.contains(where: { $0.id == me }) {
             target.currentUserId = me
             target.save()
+        }
+        // Remember the invited-as hint so the picker stays filtered.
+        if let fid = forId, target.members.contains(where: { $0.id == fid }) {
+            target.invitedAsMemberId = fid
         }
         selectedGroupId = target.familyId
         save()

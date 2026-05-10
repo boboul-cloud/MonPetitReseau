@@ -18,6 +18,8 @@ struct SettingsView: View {
     @State private var showDeleteConfirm = false
     @State private var showShareSheet = false
     @State private var showReclaimConfirm = false
+    @State private var showPersonalisedShare = false
+    @State private var personalisedShareTarget: FamilyMember?
 
     enum ImportResult: Identifiable {
         case ok, fail
@@ -34,26 +36,52 @@ struct SettingsView: View {
                             guard store.canEditByCurrentUser else { return }
                             store.familyName = v; store.save()
                         }
-                    Picker("settings.you", selection: Binding(
-                        get: { store.currentUserId },
-                        set: { newValue in
-                            // Block impersonating the group creator from a
-                            // device that is not the origin one.
-                            if let newValue,
-                               newValue == store.createdBy,
-                               !store.isOwnerDevice {
-                                return
+
+                    // Invited-as hint: show only the designated member in the picker,
+                    // with an option to unlock the full list.
+                    if let invitedId = store.invitedAsMemberId,
+                       let invitedMember = store.member(invitedId) {
+                        LabeledContent("settings.you") {
+                            HStack(spacing: 6) {
+                                AvatarView(member: invitedMember, size: 22)
+                                Text(invitedMember.fullName)
+                                    .font(.subheadline)
+                                Spacer()
+                                Button("settings.you.change") {
+                                    store.invitedAsMemberId = nil
+                                }
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
                             }
-                            store.currentUserId = newValue; store.save()
                         }
-                    )) {
-                        Text("picker.none").tag(UUID?.none)
-                        ForEach(store.members) { m in
-                            // Hide the creator entry on non-origin devices.
-                            if m.id == store.createdBy && !store.isOwnerDevice {
-                                EmptyView()
-                            } else {
-                                Text(m.fullName).tag(UUID?.some(m.id))
+                        .onAppear {
+                            // Auto-select the invited member if not already done.
+                            if store.currentUserId != invitedId {
+                                store.currentUserId = invitedId; store.save()
+                            }
+                        }
+                    } else {
+                        Picker("settings.you", selection: Binding(
+                            get: { store.currentUserId },
+                            set: { newValue in
+                                // Block impersonating the group creator from a
+                                // device that is not the origin one.
+                                if let newValue,
+                                   newValue == store.createdBy,
+                                   !store.isOwnerDevice {
+                                    return
+                                }
+                                store.currentUserId = newValue; store.save()
+                            }
+                        )) {
+                            Text("picker.none").tag(UUID?.none)
+                            ForEach(store.members) { m in
+                                // Hide the creator entry on non-origin devices.
+                                if m.id == store.createdBy && !store.isOwnerDevice {
+                                    EmptyView()
+                                } else {
+                                    Text(m.fullName).tag(UUID?.some(m.id))
+                                }
                             }
                         }
                     }
@@ -149,6 +177,46 @@ struct SettingsView: View {
                                 .font(.caption2).foregroundStyle(.secondary)
                                 .lineLimit(2).truncationMode(.middle)
                                 .textSelection(.enabled)
+                        }
+                    }
+
+                    // Personalised invites: one link per non-current member,
+                    // pre-assigned to that specific person.
+                    let otherMembers = store.members.filter { $0.id != store.currentUserId }
+                    if !otherMembers.isEmpty {
+                        Section {
+                            Text("settings.share.personal.help")
+                                .font(.caption).foregroundStyle(.secondary)
+                            ForEach(otherMembers) { m in
+                                Button {
+                                    personalisedShareTarget = m
+                                    showPersonalisedShare = true
+                                } label: {
+                                    HStack(spacing: 10) {
+                                        AvatarView(member: m, size: 28)
+                                        VStack(alignment: .leading, spacing: 1) {
+                                            Text(m.fullName)
+                                            if !m.phone.isEmpty {
+                                                Text(m.phone)
+                                                    .font(.caption2)
+                                                    .foregroundStyle(.secondary)
+                                            }
+                                        }
+                                        Spacer()
+                                        Image(systemName: "square.and.arrow.up")
+                                            .font(.subheadline)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                                .foregroundStyle(.primary)
+                            }
+                        } header: {
+                            Text("settings.section.share.personal")
+                        }
+                        .sheet(isPresented: $showPersonalisedShare) {
+                            if let target = personalisedShareTarget {
+                                ActivityView(activityItems: [store.shareMessage(for: target.id)])
+                            }
                         }
                     }
                 }

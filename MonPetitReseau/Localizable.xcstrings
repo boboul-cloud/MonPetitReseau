@@ -3085,6 +3085,54 @@
         }
       }
     },
+    "settings.section.share.personal" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personalised invitations"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invitations personnalisées"
+          }
+        }
+      }
+    },
+    "settings.share.personal.help" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send a link pre-assigned to a specific person. When they open it, the app identifies them automatically."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez un lien pré-assigné à une personne. En l'ouvrant, l'app l'identifie automatiquement."
+          }
+        }
+      }
+    },
+    "settings.you.change" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Change"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changer"
+          }
+        }
+      }
+    },
     "settings.share.button" : {
       "localizations" : {
         "en" : {
@@ -3161,6 +3209,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "📱 Ouvrir dans l'app :"
+          }
+        }
+      }
+    },
+    "share.message.for" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📱 This link is for %@ — it will identify you automatically:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📱 Ce lien est pour %@ — il vous identifie automatiquement :"
           }
         }
       }
